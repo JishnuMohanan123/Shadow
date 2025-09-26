@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - {{ module_data['title'] }}{% endblock %}
+
+{% block content %}
+<!-- Mission Header -->
+<div class="card" style="text-align: center; background: linear-gradient(135deg, rgba(255, 68, 68, 0.2), rgba(255, 170, 0, 0.1)); border: 2px solid #ff4444; margin-bottom: 2rem; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 68, 68, 0.1) 10px, rgba(255, 68, 68, 0.1) 20px); opacity: 0.3;"></div>
+
+    <div style="position: relative; z-index: 2;">
+        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+            <div style="background: rgba(255, 68, 68, 0.2); color: #ff4444; padding: 0.5rem 1rem; border-radius: 6px; font-family: 'Orbitron', monospace; font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">
+                MISSION BRIEFING
+            </div>
+            <div style="background: rgba(0, 0, 0, 0.5); padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid rgba(255, 68, 68, 0.3);">
+                <span style="color: #ff4444; font-family: 'Orbitron', monospace; font-size: 0.8rem; font-weight: 600;">
+                    THREAT LEVEL: {{ module_data['difficulty'].upper() }}
+                </span>
+            </div>
+        </div>
+
+        <div style="font-size: 5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 20px #ff4444); animation: float 4s ease-in-out infinite;">
+            {{ module_data['emoji'] }}
+        </div>
+
+        <div class="difficulty-badge difficulty-{{ module_data['difficulty'].lower() }}" style="margin-bottom: 1rem; font-size: 1rem; padding: 0.75rem 1.5rem;">
+            {{ module_data['difficulty'].upper() }} THREAT
+        </div>
+
+        <h1 style="margin-bottom: 1rem; color: #00ffff; font-family: 'Orbitron', monospace; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 20px #00ffff;">
+            {{ module_data['title'] }}
+        </h1>
+
+        <p style="font-size: 1.25rem; color: #a0c4ff; margin-bottom: 2rem; line-height: 1.6; font-family: 'Rajdhani', monospace; max-width: 600px; margin-left: auto; margin-right: auto;">
+            {{ module_data['description'] }}
+        </p>
+
+        <!-- Mission Objectives -->
+        <div style="background: rgba(0, 0, 0, 0.5); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(0, 255, 255, 0.3); margin-bottom: 2rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                <div>
+                    <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">
+                        MISSION REWARD
+                    </div>
+                    <div style="color: #00ffff; font-weight: 700; font-size: 1.5rem; font-family: 'Orbitron', monospace;">
+                        {{ module_data['points_reward'] }} CYBER POINTS
+                    </div>
+                </div>
+                <div>
+                    <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">
+                        QUESTIONS
+                    </div>
+                    <div style="color: #ffaa00; font-weight: 700; font-size: 1.5rem; font-family: 'Orbitron', monospace;">
+                        {{ module_data['questions']|length }} CHALLENGES
+                    </div>
+                </div>
+                <div>
+                    <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">
+                        PASS REQUIREMENT
+                    </div>
+                    <div style="color: #ff4444; font-weight: 700; font-size: 1.5rem; font-family: 'Orbitron', monospace;">
+                        60% ACCURACY
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mission Form -->
+<form method="POST" action="{{ url_for('submit_module', module_id=module_id) }}" id="missionForm">
+    {% for i, question in enumerate(module_data['questions']) %}
+    <div class="card" style="margin-bottom: 2rem; border-left: 4px solid #0088ff; position: relative; overflow: hidden;">
+        <!-- Question Header -->
+        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+            <div style="background: rgba(0, 136, 255, 0.2); color: #0088ff; padding: 0.75rem 1.5rem; border-radius: 6px; font-family: 'Orbitron', monospace; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+                CHALLENGE {{ i+1 }} / {{ module_data['questions']|length }}
+            </div>
+            <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                [ANALYZING THREAT PATTERN]
+            </div>
+        </div>
+
+        <!-- Question Text -->
+        <div style="background: rgba(0, 0, 0, 0.3); padding: 2rem; border-radius: 8px; border: 1px solid rgba(0, 136, 255, 0.3); margin-bottom: 2rem;">
+            <h3 style="color: #00ffff; margin-bottom: 1.5rem; font-size: 1.4rem; font-family: 'Rajdhani', monospace; line-height: 1.5;">
+                {{ question['text'] }}
+            </h3>
+        </div>
+
+        <!-- Answer Options -->
+        <div style="display: grid; gap: 1rem;">
+            {% for j, option in enumerate(question['options']) %}
+            <label class="option" style="display: flex; align-items: center; background: rgba(0, 136, 255, 0.05); border: 2px solid rgba(0, 136, 255, 0.2); border-radius: 8px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; font-family: 'Rajdhani', monospace; font-size: 1.1rem; position: relative;"
+                   onmouseover="this.style.background='rgba(0, 136, 255, 0.1)'; this.style.borderColor='#0088ff'; this.style.transform='translateX(8px)'"
+                   onmouseout="this.style.background='rgba(0, 136, 255, 0.05)'; this.style.borderColor='rgba(0, 136, 255, 0.2)'; this.style.transform=''">
+
+                <input type="radio" name="q{{ i }}" value="{{ j }}" required
+                       style="margin-right: 1.5rem; transform: scale(1.3); accent-color: #0088ff;">
+
+                <div style="flex: 1;">
+                    <div style="color: #00ffff; font-weight: 600; margin-bottom: 0.25rem; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                        OPTION {{ 'ABCD'[j] }}
+                    </div>
+                    <div style="color: #a0c4ff;">
+                        {{ option }}
+                    </div>
+                </div>
+
+                <!-- Selection Indicator -->
+                <div class="selection-indicator" style="width: 20px; height: 20px; border: 2px solid #0088ff; border-radius: 50%; position: absolute; right: 1.5rem; opacity: 0; transition: all 0.3s ease;"></div>
+            </label>
+            {% endfor %}
+        </div>
+
+        <!-- Scanning Line Effect -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #0088ff, transparent); animation: scan-line 3s linear infinite; opacity: 0.5;"></div>
+    </div>
+    {% endfor %}
+
+    <!-- Submit Section -->
+    <div style="text-align: center; margin: 3rem 0;">
+        <div style="background: rgba(0, 255, 136, 0.1); border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">⚠️</span>
+                <h3 style="color: #00ff88; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase;">
+                    MISSION PARAMETERS
+                </h3>
+            </div>
+            <p style="color: #a0c4ff; font-family: 'Rajdhani', monospace; line-height: 1.6; margin-bottom: 1rem;">
+                Analyze each cyber threat scenario carefully. You must achieve 60% accuracy to successfully complete this mission and earn the <strong style="color: #00ffff;">{{ module_data['badge'] }}</strong> achievement badge.
+            </p>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 6px; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                <div style="color: #ff4444;">WARNING: All responses are final once submitted</div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn" style="font-size: 1.25rem; padding: 1.5rem 3rem; position: relative; overflow: hidden;">
+            <span style="margin-right: 1rem;">🚀</span>
+            EXECUTE MISSION
+            <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s;"></div>
+        </button>
+    </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add radio button selection effects
+        const radioInputs = document.querySelectorAll('input[type="radio"]');
+        radioInputs.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Remove selection from all options in this question
+                const questionOptions = document.querySelectorAll(`input[name="${this.name}"]`);
+                questionOptions.forEach(option => {
+                    const indicator = option.closest('.option').querySelector('.selection-indicator');
+                    const label = option.closest('.option');
+                    indicator.style.opacity = '0';
+                    indicator.style.background = 'transparent';
+                    label.style.borderColor = 'rgba(0, 136, 255, 0.2)';
+                    label.style.background = 'rgba(0, 136, 255, 0.05)';
+                });
+
+                // Add selection to chosen option
+                const selectedIndicator = this.closest('.option').querySelector('.selection-indicator');
+                const selectedLabel = this.closest('.option');
+                selectedIndicator.style.opacity = '1';
+                selectedIndicator.style.background = '#0088ff';
+                selectedLabel.style.borderColor = '#0088ff';
+                selectedLabel.style.background = 'rgba(0, 136, 255, 0.15)';
+
+                // Add selection sound effect (visual)
+                selectedLabel.style.animation = 'glitch 0.2s ease-in-out';
+                setTimeout(() => {
+                    selectedLabel.style.animation = '';
+                }, 200);
+            });
+        });
+
+        // Form submission effects
+        const form = document.getElementById('missionForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', function(e) {
+            // Check if all questions are answered
+            const totalQuestions = {{ module_data['questions']|length }};
+            let answeredQuestions = 0;
+
+            for (let i = 0; i < totalQuestions; i++) {
+                const questionInputs = document.querySelectorAll(`input[name="q${i}"]`);
+                const isAnswered = Array.from(questionInputs).some(input => input.checked);
+                if (isAnswered) answeredQuestions++;
+            }
+
+            if (answeredQuestions < totalQuestions) {
+                e.preventDefault();
+                showCyberNotification(`MISSION INCOMPLETE - ${totalQuestions - answeredQuestions} CHALLENGES REMAINING`, 'error');
+                return;
+            }
+
+            // Show submission state
+            submitBtn.innerHTML = '<span style="margin-right: 1rem;">⏳</span>ANALYZING RESPONSES...';
+            submitBtn.disabled = true;
+
+            // Add dramatic submission effect
+            document.body.style.animation = 'scan-line 0.5s ease-in-out 3';
+
+            // Add scanning lines to all cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.borderColor = '#00ff88';
+                    card.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.3)';
+                    setTimeout(() => {
+                        card.style.borderColor = '';
+                        card.style.boxShadow = '';
+                    }, 500);
+                }, index * 200);
+            });
+        });
+
+        // Add progress indicator
+        function updateProgress() {
+            const totalQuestions = {{ module_data['questions']|length }};
+            let answeredQuestions = 0;
+
+            for (let i = 0; i < totalQuestions; i++) {
+                const questionInputs = document.querySelectorAll(`input[name="q${i}"]`);
+                const isAnswered = Array.from(questionInputs).some(input => input.checked);
+                if (isAnswered) answeredQuestions++;
+            }
+
+            const progress = (answeredQuestions / totalQuestions) * 100;
+
+            // Update submit button state
+            if (answeredQuestions === totalQuestions) {
+                submitBtn.style.background = 'linear-gradient(135deg, #00ff88, #0088ff)';
+                submitBtn.style.borderColor = '#00ff88';
+                submitBtn.innerHTML = '<span style="margin-right: 1rem;">🚀</span>EXECUTE MISSION [READY]';
+            } else {
+                submitBtn.style.background = '';
+                submitBtn.style.borderColor = '#0088ff';
+                submitBtn.innerHTML = `<span style="margin-right: 1rem;">🚀</span>EXECUTE MISSION [${answeredQuestions}/${totalQuestions}]`;
+            }
+        }
+
+        // Update progress on any radio button change
+        radioInputs.forEach(radio => {
+            radio.addEventListener('change', updateProgress);
+        });
+
+        // Initial progress update
+        updateProgress();
+
+        // Add typing effect to question text
+        const questions = document.querySelectorAll('h3');
+        questions.forEach((question, index) => {
+            const text = question.textContent;
+            question.textContent = '';
+
+            setTimeout(() => {
+                let i = 0;
+                const typeInterval = setInterval(() => {
+                    if (i < text.length) {
+                        question.textContent += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(typeInterval);
+                    }
+                }, 20);
+            }, index * 500);
+        });
+    });
+</script>
+{% endblock %}

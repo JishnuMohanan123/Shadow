@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - Elite Agent Rankings{% endblock %}
+
+{% block content %}
+<div class="card hero-card" style="text-align: center; background: linear-gradient(135deg, rgba(255, 170, 0, 0.2), rgba(255, 215, 0, 0.1)); border: 2px solid #ffaa00;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+        <div style="font-size: 4rem; animation: float 3s ease-in-out infinite;">🏆</div>
+        <div>
+            <h1 style="color: #ffaa00; font-size: 3rem; margin-bottom: 0.5rem; font-family: 'Orbitron', monospace; text-shadow: 0 0 20px #ffaa00;">
+                ELITE RANKINGS
+            </h1>
+            <p style="font-size: 1.25rem; opacity: 0.9; color: #a0c4ff; font-family: 'Rajdhani', monospace; letter-spacing: 2px;">
+                [GLOBAL CYBER WARFARE LEADERBOARD]
+            </p>
+        </div>
+    </div>
+
+    <!-- Live Stats -->
+    <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px; margin-top: 1rem; border: 1px solid rgba(255, 170, 0, 0.3);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+            <div>
+                <div style="color: #00ff88;">ACTIVE AGENTS</div>
+                <div style="color: #ffaa00; font-weight: bold;">{{ leaders|length }}</div>
+            </div>
+            <div>
+                <div style="color: #00ff88;">TOP SCORE</div>
+                <div style="color: #ffaa00; font-weight: bold;">{{ leaders[0][1] if leaders else '0' }}</div>
+            </div>
+            <div>
+                <div style="color: #00ff88;">COMPETITION</div>
+                <div style="color: #ffaa00; font-weight: bold;">LIVE</div>
+            </div>
+            <div>
+                <div style="color: #00ff88;">LAST UPDATE</div>
+                <div style="color: #ffaa00; font-weight: bold;" id="lastUpdate">NOW</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="padding: 2rem;">
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+        <h2 style="color: #00ffff; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+            Global Agent Rankings
+        </h2>
+        <div style="height: 2px; flex: 1; background: linear-gradient(90deg, #00ffff, transparent);"></div>
+        <div style="background: rgba(0, 255, 255, 0.1); padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid rgba(0, 255, 255, 0.3);">
+            <span style="color: #00ffff; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                REAL-TIME DATA
+            </span>
+        </div>
+    </div>
+
+    <div id="rankings-container">
+        {% for i, leader in enumerate(leaders) %}
+        {% set rank = i + 1 %}
+        {% set username, total_score, completed_modules_str, badges_str, avatar_emoji, current_level = leader %}
+        {% set completed_modules = safe_json_loads(completed_modules_str, []) %}
+        {% set badges = safe_json_loads(badges_str, []) %}
+        {% set is_current_user = username == user[1] %}
+
+        <!-- Determine rank styling -->
+        {% if rank == 1 %}
+        {% set rank_class = "background: linear-gradient(135deg, #ffaa00, #ffd700); color: #000;" %}
+        {% set rank_icon = "🥇" %}
+        {% set border_color = "#ffd700" %}
+        {% set glow_color = "rgba(255, 215, 0, 0.5)" %}
+        {% elif rank == 2 %}
+        {% set rank_class = "background: linear-gradient(135deg, #c0c0c0, #e5e5e5); color: #000;" %}
+        {% set rank_icon = "🥈" %}
+        {% set border_color = "#c0c0c0" %}
+        {% set glow_color = "rgba(192, 192, 192, 0.5)" %}
+        {% elif rank == 3 %}
+        {% set rank_class = "background: linear-gradient(135deg, #cd7f32, #d2691e); color: #fff;" %}
+        {% set rank_icon = "🥉" %}
+        {% set border_color = "#cd7f32" %}
+        {% set glow_color = "rgba(205, 127, 50, 0.5)" %}
+        {% else %}
+        {% set rank_class = "background: rgba(0, 255, 255, 0.1); color: #00ffff;" %}
+        {% set rank_icon = rank %}
+        {% set border_color = "#00ffff" %}
+        {% set glow_color = "rgba(0, 255, 255, 0.2)" %}
+        {% endif %}
+
+        <div class="ranking-item"
+             style="display: flex; align-items: center; padding: 1.5rem; background: var(--panel-bg); border-radius: 12px; margin-bottom: 1rem; border: 2px solid {{ border_color }}; backdrop-filter: blur(10px); transition: all 0.3s ease; position: relative; overflow: hidden; {% if is_current_user %}box-shadow: 0 0 30px {{ glow_color }};{% endif %}"
+             onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 40px {{ glow_color }}';"
+             onmouseout="this.style.transform=''; this.style.boxShadow='{% if is_current_user %}0 0 30px {{ glow_color }}{% else %}''{% endif %}';">
+
+            <!-- Rank Badge -->
+            <div style="display: flex; align-items: center; justify-content: center; width: 70px; height: 70px; border-radius: 50%; {{ rank_class }} margin-right: 2rem; font-weight: 900; font-size: 1.4rem; font-family: 'Orbitron', monospace; box-shadow: 0 0 20px {{ glow_color }}; position: relative;">
+                {{ rank_icon }}
+                {% if rank <= 3 %}
+                <div style="position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; background: {{ border_color }}; border-radius: 50%; animation: pulse-glow 2s ease-in-out infinite alternate;"></div>
+                {% endif %}
+            </div>
+
+            <!-- Agent Info -->
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex: 1;">
+                <span style="font-size: 2.5rem; filter: drop-shadow(0 0 10px {{ border_color }});">{{ avatar_emoji }}</span>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <h3 style="margin: 0; color: #00ffff; font-size: 1.4rem; font-family: 'Orbitron', monospace; text-transform: uppercase; letter-spacing: 1px;">
+                            {{ username }}
+                        </h3>
+                        {% if is_current_user %}
+                        <span style="background: rgba(0, 255, 255, 0.2); color: #00ffff; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; font-family: 'Orbitron', monospace; border: 1px solid rgba(0, 255, 255, 0.5);">
+                            YOU
+                        </span>
+                        {% endif %}
+                        {% if rank <= 3 %}
+                        <span style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; font-family: 'Orbitron', monospace; border: 1px solid rgba(255, 215, 0, 0.5);">
+                            ELITE
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 2rem; font-size: 0.9rem; color: #a0c4ff; font-family: 'Rajdhani', monospace;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>🛡️</span>
+                            <span>Level {{ current_level }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>⚔️</span>
+                            <span>{{ completed_modules|length }} Missions</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>🏅</span>
+                            <span>{{ badges|length }} Badges</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Display -->
+            <div style="text-align: right; margin-left: 2rem;">
+                <div style="font-size: 2rem; font-weight: 900; color: {{ border_color }}; font-family: 'Orbitron', monospace; text-shadow: 0 0 10px {{ glow_color }}; margin-bottom: 0.25rem;">
+                    {{ "{:,}".format(total_score) }}
+                </div>
+                <div style="font-size: 0.9rem; color: #a0c4ff; font-family: 'Orbitron', monospace; text-transform: uppercase;">
+                    Cyber Points
+                </div>
+            </div>
+
+            <!-- Animated Background for Top 3 -->
+            {% if rank <= 3 %}
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(45deg, transparent 30%, {{ glow_color }} 50%, transparent 70%); opacity: 0.1; animation: scan-line 3s linear infinite;"></div>
+            {% endif %}
+
+            {% if is_current_user %}
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent); animation: scan-line 2s linear infinite;"></div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if leaders|length < 10 %}
+    <div style="text-align: center; margin-top: 3rem; padding: 2rem; border: 2px dashed rgba(0, 255, 255, 0.3); border-radius: 8px; background: rgba(0, 255, 255, 0.05);">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.7;">📡</div>
+        <h3 style="color: #00ffff; font-family: 'Orbitron', monospace; margin-bottom: 1rem; text-transform: uppercase;">
+            Scanning for More Agents
+        </h3>
+        <p style="color: #a0c4ff; font-family: 'Rajdhani', monospace; margin-bottom: 0;">
+            Complete more missions to unlock additional ranking data
+        </p>
+        <div style="margin-top: 1rem;">
+            <div style="display: inline-block; background: rgba(0, 255, 255, 0.1); padding: 0.5rem 1rem; border-radius: 6px; font-family: 'Orbitron', monospace; font-size: 0.8rem; color: #00ffff;">
+                QUANTUM ENCRYPTION ACTIVE
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Performance Analytics -->
+<div class="card" style="margin-top: 2rem; border-left: 4px solid #0088ff;">
+    <h3 style="color: #0088ff; font-family: 'Orbitron', monospace; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 1px;">
+        Performance Analytics
+    </h3>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+        <div style="background: rgba(0, 136, 255, 0.1); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(0, 136, 255, 0.3);">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">📊</span>
+                <h4 style="color: #0088ff; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase;">
+                    Score Distribution
+                </h4>
+            </div>
+            <div style="font-family: 'Rajdhani', monospace; color: #a0c4ff;">
+                {% if leaders %}
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>Highest:</span>
+                    <span style="color: #00ff88; font-weight: bold;">{{ "{:,}".format(leaders[0][1]) }}</span>
+                </div>
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>Average:</span>
+                    <span style="color: #ffaa00; font-weight: bold;">{{ "{:,}".format((leaders|sum(attribute=1) / leaders|length)|int) }}</span>
+                </div>
+                <div style="display: flex; justify-content: between;">
+                    <span>Your Rank:</span>
+                    <span style="color: #00ffff; font-weight: bold;">
+                        {% for i, leader in enumerate(leaders) %}
+                            {% if leader[0] == user[1] %}
+                                #{{ i + 1 }}
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="background: rgba(0, 255, 136, 0.1); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(0, 255, 136, 0.3);">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">🎯</span>
+                <h4 style="color: #00ff88; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase;">
+                    Mission Completion
+                </h4>
+            </div>
+            <div style="font-family: 'Rajdhani', monospace; color: #a0c4ff;">
+                {% set total_missions = leaders|sum(attribute=2)|length if leaders else 0 %}
+                {% set total_possible = leaders|length * 5 if leaders else 1 %}
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>Global Rate:</span>
+                    <span style="color: #00ff88; font-weight: bold;">{{ ((total_missions / total_possible) * 100)|int }}%</span>
+                </div>
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>Active Agents:</span>
+                    <span style="color: #ffaa00; font-weight: bold;">{{ leaders|length }}</span>
+                </div>
+                <div style="display: flex; justify-content: between;">
+                    <span>Elite Status:</span>
+                    <span style="color: #00ffff; font-weight: bold;">{{ (leaders|selectattr('2', 'length', 5)|list)|length }} Agents</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
+        }
+
+        // Update every 30 seconds
+        setInterval(updateTimestamp, 30000);
+
+        // Add hover effects to ranking items
+        const rankingItems = document.querySelectorAll('.ranking-item');
+        rankingItems.forEach((item, index) => {
+            item.addEventListener('mouseenter', function() {
+                // Add glitch effect to username
+                const username = this.querySelector('h3');
+                if (username) {
+                    username.style.animation = 'glitch 0.3s ease-in-out';
+                    setTimeout(() => {
+                        username.style.animation = '';
+                    }, 300);
+                }
+            });
+
+            // Stagger animation entrance
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                item.style.transition = 'all 0.5s ease';
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+
+        // Simulate live updates
+        setInterval(() => {
+            const liveIndicators = document.querySelectorAll('[data-live]');
+            liveIndicators.forEach(indicator => {
+                indicator.style.animation = 'pulse-glow 0.5s ease-in-out';
+                setTimeout(() => {
+                    indicator.style.animation = '';
+                }, 500);
+            });
+        }, 5000);
+    });
+
+    // Add scanning effect
+    function addScanEffect() {
+        const container = document.getElementById('rankings-container');
+        const scanLine = document.createElement('div');
+        scanLine.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        animation: scan-line 2s linear;
+        z-index: 10;
+    `;
+
+        container.style.position = 'relative';
+        container.appendChild(scanLine);
+
+        setTimeout(() => {
+            container.removeChild(scanLine);
+        }, 2000);
+    }
+
+    // Trigger scan effect periodically
+    setInterval(addScanEffect, 10000);
+</script>
+{% endblock %}

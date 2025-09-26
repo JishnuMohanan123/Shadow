@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shadow 1834 - Advanced Cyber Security Training Platform. Master phishing detection, malware analysis, password security, and network defense techniques.">
+    <meta name="keywords" content="cyber-security, training, hacking, security, ethical-hacking, penetration-testing">
+    <meta name="author" content="Shadow 1834 Cyber Security Team">
+
+    <title>{% block title %}Shadow 1834 - Cyber Security Command Center{% endblock %}</title>
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Optimized font loading with font-display: swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#00ffff">
+    <meta name="msapplication-TileColor" content="#00ffff">
+</head>
+<body>
+{% if user %}
+<div class="header">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="{{ url_for('dashboard') }}" class="logo" aria-label="Shadow 1834 Cyber Security Home">
+            <span class="logo-icon" aria-hidden="true" role="img" aria-label="Lightning bolt">⚡</span>
+            SHADOW 1834
+            <span class="logo-classified" aria-label="Classified information">[CLASSIFIED]</span>
+        </a>
+        <ul class="nav-links" role="menubar">
+            <li role="none">
+                <a href="{{ url_for('dashboard') }}"
+                   {% if request.endpoint == 'dashboard' %}class="active"{% endif %}
+                   role="menuitem"
+                   aria-current="{% if request.endpoint == 'dashboard' %}page{% endif %}">
+                    <span class="nav-icon" aria-hidden="true" role="img" aria-label="Target">🎯</span>
+                    <span class="nav-text">COMMAND CENTER</span>
+                </a>
+            </li>
+            <li role="none">
+                <a href="{{ url_for('leaderboard') }}"
+                   {% if request.endpoint == 'leaderboard' %}class="active"{% endif %}
+                   role="menuitem"
+                   aria-current="{% if request.endpoint == 'leaderboard' %}page{% endif %}">
+                    <span class="nav-icon" aria-hidden="true" role="img" aria-label="Trophy">🏆</span>
+                    <span class="nav-text">RANKINGS</span>
+                </a>
+            </li>
+            <li role="none">
+                <a href="{{ url_for('profile') }}"
+                   {% if request.endpoint == 'profile' %}class="active"{% endif %}
+                   role="menuitem"
+                   aria-current="{% if request.endpoint == 'profile' %}page{% endif %}">
+                    <span class="nav-icon" aria-hidden="true" role="img" aria-label="User profile">👤</span>
+                    <span class="nav-text">AGENT STATUS</span>
+                </a>
+            </li>
+        </ul>
+        <div class="user-info" role="complementary" aria-label="User information">
+            <span class="user-avatar" aria-label="User avatar">{{ user[13] }}</span>
+            <span class="user-codename">AGENT {{ user[1]|upper }}</span>
+            <span class="user-level" aria-label="User level {{ user[11] }}">[LVL-{{ user[11] }}]</span>
+            <a href="{{ url_for('logout') }}"
+               class="logout-link"
+               role="button"
+               aria-label="Logout">LOGOUT</a>
+        </div>
+    </nav>
+</div>
+{% endif %}
+
+<div class="container">
+    <!-- Enhanced Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="alert" aria-live="polite">
+        <span class="alert-icon" aria-hidden="true" role="img" aria-label="Alert status">
+            {% if category == 'success' %}✅
+            {% elif category == 'warning' %}⚠️
+            {% elif category == 'error' %}❌
+            {% else %}ℹ️
+            {% endif %}
+        </span>
+        <span class="alert-category" aria-label="Alert type: {{ category }}">{{ category|upper }}</span>
+        <span class="alert-message">{{ message }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Matrix background effect removed for optimal performance -->
+<!-- If needed in production, uncomment the canvas div in static/js/base.js -->
+
+<!-- External JavaScript -->
+<script src="{{ url_for('static', filename='js/base.js') }}"></script>
+
+<style>
+    /* Navigation Styles */
+    .logo-icon {
+        margin-right: 0.5rem;
+        font-size: 1.2em;
+    }
+
+    .logo-classified {
+        margin-left: 0.5rem;
+        font-size: 0.7em;
+        opacity: 0.7;
+    }
+
+    .nav-icon {
+        margin-right: 0.5rem;
+        font-size: 1.1em;
+    }
+
+    .nav-text {
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .user-avatar {
+        font-size: 1.2rem;
+    }
+
+    .user-codename {
+        font-weight: 700;
+        color: #00ffff;
+        margin: 0 0.5rem;
+    }
+
+    .user-level {
+        color: #00ff88;
+        font-size: 0.8rem;
+        margin-right: 1rem;
+    }
+
+    .logout-link {
+        color: #ff4444;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border: 1px solid #ff4444;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .logout-link:hover {
+        background: rgba(255, 68, 68, 0.1);
+        transform: translateY(-2px);
+    }
+
+    /* Alert Components */
+    .alert-icon {
+        font-size: 1.2rem;
+        margin-right: 0.5rem;
+    }
+
+    .alert-category {
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-right: 0.5rem;
+    }
+
+    .alert-message {
+        flex: 1;
+    }
+
+    /* Cyber Notification System */
+    .cyber-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        max-width: 400px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .cyber-notification.show {
+        transform: translateX(0);
+    }
+
+    .cyber-notification.hide {
+        transform: translateX(100%);
+    }
+
+    /* Animations */
+    @keyframes glitch {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-2px); }
+        40% { transform: translateX(2px); }
+        60% { transform: translateX(-2px); }
+        80% { transform: translateX(2px); }
+    }
+
+    @keyframes hologram-flicker {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+
+    .hologram-effect::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 255, 0.1) 2px,
+                rgba(0, 255, 255, 0.1) 4px
+        );
+        pointer-events: none;
+        animation: hologram-flicker 0.15s linear infinite;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .nav-links {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .user-info {
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .cyber-notification {
+            right: 10px;
+            left: 10px;
+            max-width: none;
+        }
+    }
+</style>
+</body>
+</html>

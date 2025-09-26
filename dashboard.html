@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - Cyber Security Command Center{% endblock %}
+
+{% block head %}
+<meta name="description" content="Agent {{ user[1] }} - Cyber Security Command Center. Monitor missions, track progress, and engage in advanced cybersecurity training.">
+<meta name="keywords" content="cyber-security, command-center, training, missions, security-clearance, threat-analysis">
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
+{% block content %}
+<div class="card hero-card dashboard-hero" role="banner" aria-label="Welcome dashboard">
+    <div class="hero-content">
+        <div class="hero-icon" aria-hidden="true">⚡</div>
+        <div class="hero-text">
+            <h1 class="hero-title">WELCOME BACK, AGENT {{ user[1]|upper }}</h1>
+            <p class="hero-subtitle">[CYBER WARFARE TRAINING SYSTEM ACTIVE]</p>
+        </div>
+    </div>
+
+    <!-- System Status Bar -->
+    <div class="system-status" role="region" aria-label="System status indicators">
+        <div class="status-grid">
+            <div class="status-item">
+                <div class="status-label">SYSTEM STATUS</div>
+                <div class="status-value operational">OPERATIONAL</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">CLEARANCE LEVEL</div>
+                <div class="status-value">{{ user[11] }}</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">THREAT LEVEL</div>
+                <div class="status-value warning">MODERATE</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">CONN STATUS</div>
+                <div class="status-value secure">SECURE</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card score-card" role="region" aria-label="Total score statistics">
+        <div class="stat-header">
+            <span class="stat-icon" aria-hidden="true">🎯</span>
+            <span class="stat-subtitle">[TOTAL SCORE]</span>
+        </div>
+        <span class="stat-number">{{ user[4] }}</span>
+        <span class="stat-label">CYBER POINTS</span>
+        <div class="progress-bar" style="margin-top: 0.5rem;">
+            <div class="progress-fill" style="width: {{ (user[4] / 2500 * 100)|int }}%;"></div>
+        </div>
+    </div>
+
+    <div class="stat-card missions-card" role="region" aria-label="Mission completion statistics">
+        <div class="stat-header">
+            <span class="stat-icon" aria-hidden="true">⚔️</span>
+            <span class="stat-subtitle">[MISSIONS]</span>
+        </div>
+        <span class="stat-number">{{ completed_modules|length }}</span>
+        <span class="stat-label">COMPLETED</span>
+        <div class="stat-remaining">
+            {{ 5 - completed_modules|length }} REMAINING
+        </div>
+    </div>
+
+    <div class="stat-card level-card" role="region" aria-label="Security clearance statistics">
+        <div class="stat-header">
+            <span class="stat-icon" aria-hidden="true">🛡️</span>
+            <span class="stat-subtitle">[LEVEL]</span>
+        </div>
+        <span class="stat-number">{{ user[11] }}</span>
+        <span class="stat-label">SECURITY CLEARANCE</span>
+        <div class="stat-classified">
+            CLASSIFIED
+        </div>
+    </div>
+
+    <div class="stat-card badges-card" role="region" aria-label="Achievement statistics">
+        <div class="stat-header">
+            <span class="stat-icon" aria-hidden="true">🏅</span>
+            <span class="stat-subtitle">[BADGES]</span>
+        </div>
+        <span class="stat-number">{{ badges|length }}</span>
+        <span class="stat-label">ACHIEVEMENTS</span>
+        <div class="stat-remaining">
+            {{ 5 - badges|length }} TO UNLOCK
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-layout">
+    <div class="missions-section">
+        <div class="section-header">
+            <h2 class="section-title">TRAINING MISSIONS</h2>
+            <div class="section-divider"></div>
+            <span class="section-badge">[CLASSIFIED OPS]</span>
+        </div>
+
+        <div class="module-grid">
+            {% for module_id, module in MODULES.items() %}
+            {% set is_completed = module_id in completed_modules %}
+            {% set can_access = can_access_module(user[11], module_id) %}
+
+            {% if is_completed %}
+            {% set card_class = "module-card completed" %}
+            {% set button_text = "✅ MISSION COMPLETE" %}
+            {% set button_class = "btn-success" %}
+            {% set button_disabled = 'disabled' %}
+            {% set status_color = "#00ff88" %}
+            {% set status_text = "COMPLETED" %}
+            {% elif can_access %}
+            {% set card_class = "module-card" %}
+            {% set button_text = "🚀 INITIATE MISSION" %}
+            {% set button_class = "btn-primary" %}
+            {% set button_disabled = '' %}
+            {% set status_color = "#00ffff" %}
+            {% set status_text = "AVAILABLE" %}
+            {% else %}
+            {% set card_class = "module-card locked" %}
+            {% set button_text = "🔒 CLEARANCE LVL " ~ module['unlock_level'] ~ " REQUIRED" %}
+            {% set button_class = "btn-secondary" %}
+            {% set button_disabled = 'disabled' %}
+            {% set status_color = "#666" %}
+            {% set status_text = "LOCKED" %}
+            {% endif %}
+
+            <div class="{{ card_class }}" style="position: relative;">
+                <!-- Status Indicator -->
+                <div style="position: absolute; top: 1rem; right: 1rem; background: {{ status_color }}; color: #000; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: bold; font-family: 'Orbitron', monospace;">
+                    {{ status_text }}
+                </div>
+
+                <!-- Threat Level Indicator -->
+                <div class="module-header">
+                    <div class="module-emoji" aria-hidden="true">{{ module['emoji'] }}</div>
+                    <div class="module-threat-info">
+                        <div class="threat-label">THREAT LEVEL</div>
+                        <div class="difficulty-badge difficulty-{{ module['difficulty'].lower() }}">
+                            {{ module['difficulty'].upper() }}
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 1rem; color: #00ffff; font-family: 'Orbitron', monospace; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 1px;">
+                    {{ module['title'] }}
+                </h3>
+                <p style="color: #a0c4ff; margin-bottom: 2rem; line-height: 1.6; font-family: 'Rajdhani', monospace;">
+                    {{ module['description'] }}
+                </p>
+
+                <!-- Mission Briefing -->
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 6px; margin-bottom: 2rem; border-left: 3px solid #00ffff;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                        <div>
+                            <span style="color: #00ff88; font-family: 'Orbitron', monospace;">REWARD:</span>
+                            <span style="color: #00ffff; font-weight: 700; margin-left: 0.5rem;">{{ module['points_reward'] }} PTS</span>
+                        </div>
+                        <div>
+                            <span style="color: #00ff88; font-family: 'Orbitron', monospace;">CLEARANCE:</span>
+                            <span style="color: #ffaa00; font-weight: 700; margin-left: 0.5rem;">LVL-{{ module['unlock_level'] }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('module', module_id=module_id) }}"
+                   class="btn {{ button_class }}"
+                   {% if button_disabled %}disabled{% endif %}
+                   style="width: 100%; font-size: 0.9rem;">
+                    {{ button_text }}
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div>
+        <!-- Active Agents Panel -->
+        <div class="card" style="border-left: 4px solid #00ff88;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="width: 12px; height: 12px; background: #00ff88; border-radius: 50%; animation: pulse-glow 2s ease-in-out infinite alternate;"></div>
+                <h3 style="color: #00ffff; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                    ACTIVE AGENTS
+                </h3>
+            </div>
+
+            {% if active_players %}
+            {% for player in active_players[:5] %}
+            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(0, 255, 255, 0.05); border-radius: 8px; margin-bottom: 0.75rem; border: 1px solid rgba(0, 255, 255, 0.2); transition: all 0.3s ease;"
+                 onmouseover="this.style.background='rgba(0, 255, 255, 0.1)'; this.style.borderColor='#00ffff'"
+                 onmouseout="this.style.background='rgba(0, 255, 255, 0.05)'; this.style.borderColor='rgba(0, 255, 255, 0.2)'">
+                <span style="font-size: 1.5rem;">{{ player[1] }}</span>
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; color: #00ffff; font-family: 'Orbitron', monospace; font-size: 0.9rem; text-transform: uppercase;">
+                        {{ player[0] }}
+                    </div>
+                    <div style="font-size: 0.8rem; color: #00ff88; font-family: 'Rajdhani', monospace;">
+                        {{ player[2] }} CYBER POINTS
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div style="width: 8px; height: 8px; background: #00ff88; border-radius: 50%; animation: pulse-glow 1s ease-in-out infinite alternate;"></div>
+                    <span style="font-size: 0.7rem; color: #00ff88; font-family: 'Orbitron', monospace; margin-top: 0.25rem;">ONLINE</span>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div style="text-align: center; padding: 2rem; color: #666; font-style: italic;">
+                <div style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;">📡</div>
+                <p style="font-family: 'Orbitron', monospace;">NO AGENTS CURRENTLY ACTIVE</p>
+                <p style="font-size: 0.8rem; color: #888; margin-top: 0.5rem;">SCANNING FOR SIGNALS...</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- System Alerts Panel -->
+        <div class="card" style="border-left: 4px solid #ffaa00; margin-top: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <span style="font-size: 1.2rem; animation: glow-pulse 2s ease-in-out infinite;">⚠️</span>
+                <h3 style="color: #ffaa00; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                    SYSTEM ALERTS
+                </h3>
+            </div>
+
+            <div style="background: rgba(255, 170, 0, 0.1); padding: 1rem; border-radius: 6px; border: 1px solid rgba(255, 170, 0, 0.3); margin-bottom: 1rem;">
+                <div style="font-weight: 600; color: #ffaa00; font-size: 0.9rem; font-family: 'Orbitron', monospace; margin-bottom: 0.5rem;">
+                    [PRIORITY] NEW THREATS DETECTED
+                </div>
+                <p style="font-size: 0.8rem; color: #a0c4ff; line-height: 1.4;">
+                    Advanced persistent threats identified in global networks. Continue training to enhance defensive capabilities.
+                </p>
+            </div>
+
+            <div style="background: rgba(0, 255, 136, 0.1); padding: 1rem; border-radius: 6px; border: 1px solid rgba(0, 255, 136, 0.3);">
+                <div style="font-weight: 600; color: #00ff88; font-size: 0.9rem; font-family: 'Orbitron', monospace; margin-bottom: 0.5rem;">
+                    [INFO] TRAINING PROGRESS
+                </div>
+                <p style="font-size: 0.8rem; color: #a0c4ff; line-height: 1.4;">
+                    {{ ((completed_modules|length / 5) * 100)|int }}% of missions completed. Maintain operational readiness.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add some dynamic effects to the dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate stats on load
+        setTimeout(() => {
+            animateCounters();
+        }, 500);
+
+        // Add glitch effect to mission cards on hover
+        const missionCards = document.querySelectorAll('.module-card');
+        missionCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const title = this.querySelector('h3');
+                if (title) {
+                    title.style.animation = 'glitch 0.3s ease-in-out';
+                    setTimeout(() => {
+                        title.style.animation = '';
+                    }, 300);
+                }
+            });
+        });
+    });
+
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+            const target = parseInt(counter.textContent);
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                counter.textContent = Math.floor(current);
+            }, 16);
+        });
+    }
+
+    // Add scanning effect to progress bars
+    function animateProgressBars() {
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach((bar, index) => {
+            setTimeout(() => {
+                bar.style.transition = 'width 1.5s ease-out';
+            }, index * 200);
+        });
+    }
+
+    setTimeout(animateProgressBars, 1000);
+</script>
+{% endblock %}

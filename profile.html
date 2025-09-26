@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - Cyber Security Agent Status{% endblock %}
+
+{% block head %}
+<meta name="description" content="Agent {{ user[1] }} - Cyber Security Profile. View achievements, mission history, and security clearance status.">
+<meta name="keywords" content="cyber-security, agent-profile, achievements, mission-history, security-clearance, training-progress">
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
+{% block content %}
+<div class="card hero-card profile-hero" role="banner" aria-label="Agent profile header">
+    <h1 class="profile-title">AGENT STATUS REPORT</h1>
+    <p class="profile-subtitle">[CLASSIFIED PERSONNEL FILE]</p>
+</div>
+
+<div class="profile-layout">
+    <!-- Agent Profile Card -->
+    <div class="card profile-card" role="main" aria-label="Agent profile information">
+        <div class="agent-status-indicator">ACTIVE</div>
+
+        <div class="agent-avatar" aria-hidden="true">{{ user[13] }}</div>
+
+        <h1 class="agent-name">AGENT {{ user[1]|upper }}</h1>
+
+        <div class="agent-clearance-badge">
+            Security Level {{ user[11] }} Agent
+        </div>
+
+        <!-- Agent Details -->
+        <div class="agent-details" role="region" aria-label="Agent details">
+            <div class="detail-row">
+                <span class="detail-label">RECRUITED:</span>
+                <span class="detail-value">{{ user[7] }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">CONTACT:</span>
+                <span class="detail-value">{{ user[3] if user[3] else '[CLASSIFIED]' }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">STATUS:</span>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span class="status-text">OPERATIONAL</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">CLEARANCE:</span>
+                <span class="clearance-level">LEVEL-{{ user[11] }}</span>
+            </div>
+        </div>
+
+        <!-- Biometric Scanner Simulation -->
+        <div class="biometric-scanner" role="region" aria-label="Biometric verification">
+            <div class="scanner-title">Biometric Verification</div>
+            <div class="scanner-grid">
+                <div class="scanner-item verified">RETINAL: ✓ VERIFIED</div>
+                <div class="scanner-item verified">DNA: ✓ MATCH</div>
+                <div class="scanner-item verified">NEURAL: ✓ AUTHORIZED</div>
+                <div class="scanner-item verified">QUANTUM: ✓ SECURE</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Panel -->
+    <div>
+        <div class="stats-grid">
+            <div class="stat-card score-card" role="region" aria-label="Combat score statistics">
+                <div class="stat-header">
+                    <span class="stat-icon" aria-hidden="true">🎯</span>
+                    <span class="stat-subtitle">[COMBAT SCORE]</span>
+                </div>
+                <span class="stat-number">{{ user[4] }}</span>
+                <span class="stat-label">CYBER POINTS</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ (user[4] / 2500 * 100)|int }}%;"></div>
+                </div>
+            </div>
+
+            <div class="stat-card missions-card" role="region" aria-label="Mission completion statistics">
+                <div class="stat-header">
+                    <span class="stat-icon" aria-hidden="true">⚔️</span>
+                    <span class="stat-subtitle">[MISSIONS]</span>
+                </div>
+                <span class="stat-number">{{ completed_modules|length }}</span>
+                <span class="stat-label">COMPLETED</span>
+                <div class="stat-completion">
+                    {{ ((completed_modules|length / 5) * 100)|int }}% COMPLETION RATE
+                </div>
+            </div>
+
+            <div class="stat-card badges-card" role="region" aria-label="Achievement statistics">
+                <div class="stat-header">
+                    <span class="stat-icon" aria-hidden="true">🏅</span>
+                    <span class="stat-subtitle">[BADGES]</span>
+                </div>
+                <span class="stat-number">{{ badges|length }}</span>
+                <span class="stat-label">ACHIEVEMENTS</span>
+                <div class="stat-completion">
+                    {{ badges|length }}/5 UNLOCKED
+                </div>
+            </div>
+
+            <div class="stat-card level-card" role="region" aria-label="Security clearance statistics">
+                <div class="stat-header">
+                    <span class="stat-icon" aria-hidden="true">🛡️</span>
+                    <span class="stat-subtitle">[LEVEL]</span>
+                </div>
+                <span class="stat-number">{{ user[11] }}</span>
+                <span class="stat-label">CLEARANCE</span>
+                <div class="stat-completion">
+                    MAX LEVEL: 6
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Achievement Badges -->
+<div class="card" style="border-left: 4px solid #ffd700;">
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+        <span style="font-size: 2rem; animation: glow-pulse 3s ease-in-out infinite;">🏅</span>
+        <h2 style="color: #ffd700; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+            EARNED ACHIEVEMENTS
+        </h2>
+        <div style="height: 2px; flex: 1; background: linear-gradient(90deg, #ffd700, transparent);"></div>
+        <span style="color: #ffd700; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+            [{{ badges|length }}/5 UNLOCKED]
+        </span>
+    </div>
+
+    <div style="text-align: center;">
+        {% if badges %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            {% for badge in badges %}
+            <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 170, 0, 0.1)); border: 2px solid #ffd700; border-radius: 12px; padding: 1.5rem; position: relative; overflow: hidden; transition: all 0.3s ease;"
+                 onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(255, 215, 0, 0.3)'"
+                 onmouseout="this.style.transform=''; this.style.boxShadow=''">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">🏆</div>
+                <div style="color: #ffd700; font-weight: 700; font-family: 'Orbitron', monospace; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;">
+                    {{ badge }}
+                </div>
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent); animation: scan-line 3s linear infinite;"></div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="padding: 3rem; color: #666; background: rgba(0, 0, 0, 0.2); border: 2px dashed rgba(255, 215, 0, 0.3); border-radius: 12px;">
+            <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">🔒</div>
+            <h3 style="color: #ffd700; font-family: 'Orbitron', monospace; margin-bottom: 1rem; text-transform: uppercase;">
+                No Achievements Unlocked
+            </h3>
+            <p style="color: #a0c4ff; font-family: 'Rajdhani', monospace;">
+                Complete training missions to earn specialized combat badges and recognition
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Mission Activity Log -->
+<div class="card" style="border-left: 4px solid #0088ff;">
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+        <span style="font-size: 2rem;">📊</span>
+        <h2 style="color: #0088ff; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+            MISSION ACTIVITY LOG
+        </h2>
+        <div style="height: 2px; flex: 1; background: linear-gradient(90deg, #0088ff, transparent);"></div>
+        <span style="color: #0088ff; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+            [RECENT OPERATIONS]
+        </span>
+    </div>
+
+    {% if recent_sessions %}
+    <div style="max-height: 400px; overflow-y: auto;">
+        {% for session_data in recent_sessions %}
+        {% set module_id, score, completed_at = session_data %}
+        {% if module_id in MODULES %}
+        {% set module_name = MODULES[module_id]['title'] %}
+        {% set module_emoji = MODULES[module_id]['emoji'] %}
+        {% set total_questions = MODULES[module_id]['questions']|length %}
+
+        <div style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; background: rgba(0, 136, 255, 0.05); border-radius: 8px; margin-bottom: 1rem; border: 1px solid rgba(0, 136, 255, 0.2); transition: all 0.3s ease;"
+             onmouseover="this.style.background='rgba(0, 136, 255, 0.1)'; this.style.borderColor='#0088ff'"
+             onmouseout="this.style.background='rgba(0, 136, 255, 0.05)'; this.style.borderColor='rgba(0, 136, 255, 0.2)'">
+            <span style="font-size: 2.5rem; filter: drop-shadow(0 0 10px #0088ff);">{{ module_emoji }}</span>
+            <div style="flex: 1;">
+                <h4 style="margin: 0; color: #0088ff; font-family: 'Orbitron', monospace; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;">
+                    {{ module_name }}
+                </h4>
+                <p style="margin: 0.5rem 0 0 0; color: #a0c4ff; font-size: 0.9rem; font-family: 'Rajdhani', monospace;">
+                    COMPLETED: {{ completed_at }}
+                </p>
+            </div>
+            <div style="text-align: right;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <span style="color: #00ff88; font-weight: 700; font-family: 'Orbitron', monospace; font-size: 1.1rem;">
+                        ✓ MISSION SUCCESS
+                    </span>
+                </div>
+                <div style="color: #a0c4ff; font-size: 0.9rem; font-family: 'Orbitron', monospace;">
+                    SCORE: {{ score }}/{{ total_questions }} ({{ (score/total_questions*100)|int }}%)
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 3rem; color: #666; background: rgba(0, 0, 0, 0.2); border: 2px dashed rgba(0, 136, 255, 0.3); border-radius: 12px;">
+        <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">📡</div>
+        <h3 style="color: #0088ff; font-family: 'Orbitron', monospace; margin-bottom: 1rem; text-transform: uppercase;">
+            No Mission History
+        </h3>
+        <p style="color: #a0c4ff; font-family: 'Rajdhani', monospace;">
+            Begin your cybersecurity training to populate activity logs
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate stats on load
+        setTimeout(() => {
+            animateCounters();
+        }, 500);
+
+        // Add scanning effect to profile picture
+        const avatar = document.querySelector('[style*="font-size: 6rem"]');
+        if (avatar) {
+            setInterval(() => {
+                avatar.style.animation = 'glow-pulse 1s ease-in-out';
+                setTimeout(() => {
+                    avatar.style.animation = 'float 4s ease-in-out infinite';
+                }, 1000);
+            }, 5000);
+        }
+
+        // Add glitch effect to badges
+        const badges = document.querySelectorAll('[onmouseover*="translateY"]');
+        badges.forEach(badge => {
+            badge.addEventListener('click', function() {
+                this.style.animation = 'glitch 0.3s ease-in-out';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 300);
+            });
+        });
+    });
+
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+            const target = parseInt(counter.textContent);
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                counter.textContent = Math.floor(current);
+            }, 16);
+        });
+    }
+</script>
+{% endblock %}

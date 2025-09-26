@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - Mission Debrief{% endblock %}
+
+{% block content %}
+<!-- Mission Status Alert -->
+{% if passed %}
+<div class="alert alert-success" style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1)); border: 2px solid #00ff88; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 255, 136, 0.1) 10px, rgba(0, 255, 136, 0.1) 20px); opacity: 0.3;"></div>
+    <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 1.5rem;">
+        <span style="font-size: 3rem; animation: glow-pulse 2s ease-in-out infinite;">✅</span>
+        <div style="flex: 1;">
+            <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-weight: 900; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem;">
+                MISSION ACCOMPLISHED
+            </div>
+            <div style="color: #a0c4ff; font-family: 'Rajdhani', monospace; font-size: 1.1rem;">
+                Combat Analysis: {{ correct_answers }}/{{ total_questions }} targets eliminated ({{ percentage|int }}% accuracy)
+                <br>Cyber Points Earned: <span style="color: #00ffff; font-weight: bold;">{{ points_earned }}</span>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <div style="background: rgba(0, 255, 136, 0.2); border: 2px solid #00ff88; border-radius: 8px; padding: 1rem;">
+                <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.8rem; margin-bottom: 0.5rem;">THREAT ELIMINATED</div>
+                <div style="color: #00ffff; font-size: 2rem;">{{ percentage|int }}%</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Badge Unlock Animation -->
+<div style="text-align: center; margin: 3rem 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 170, 0, 0.1)); border: 2px solid #ffd700; border-radius: 12px; padding: 3rem; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent); animation: scan-line 2s linear infinite;"></div>
+    <div style="position: relative; z-index: 2;">
+        <div style="font-size: 4rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 0 20px #ffd700);">
+            {{ module_data["emoji"] }}
+        </div>
+        <h3 style="color: #ffd700; font-family: 'Orbitron', monospace; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">
+            ACHIEVEMENT UNLOCKED
+        </h3>
+        <div style="background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; padding: 1rem 2rem; border-radius: 25px; font-weight: 700; font-family: 'Orbitron', monospace; display: inline-block; box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);">
+            {{ module_data["badge"] }}
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-error" style="background: linear-gradient(135deg, rgba(255, 68, 68, 0.2), rgba(255, 68, 68, 0.1)); border: 2px solid #ff4444; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 68, 68, 0.1) 10px, rgba(255, 68, 68, 0.1) 20px); opacity: 0.3;"></div>
+    <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 1.5rem;">
+        <span style="font-size: 3rem; animation: glow-pulse 2s ease-in-out infinite;">❌</span>
+        <div style="flex: 1;">
+            <div style="color: #ff4444; font-family: 'Orbitron', monospace; font-weight: 900; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem;">
+                MISSION FAILED
+            </div>
+            <div style="color: #a0c4ff; font-family: 'Rajdhani', monospace; font-size: 1.1rem;">
+                Combat Analysis: {{ correct_answers }}/{{ total_questions }} targets eliminated ({{ percentage|int }}% accuracy)
+                <br><span style="color: #ff4444; font-weight: bold;">Minimum 60% accuracy required for mission success</span>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <div style="background: rgba(255, 68, 68, 0.2); border: 2px solid #ff4444; border-radius: 8px; padding: 1rem;">
+                <div style="color: #ff4444; font-family: 'Orbitron', monospace; font-size: 0.8rem; margin-bottom: 0.5rem;">THREAT REMAINS</div>
+                <div style="color: #ffaa00; font-size: 2rem;">{{ percentage|int }}%</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Mission Statistics -->
+<div class="card" style="text-align: center; margin-bottom: 2rem; border-left: 4px solid #0088ff;">
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+        <h1 style="color: #0088ff; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+            {{ module_data['title'] }} - DEBRIEF
+        </h1>
+        <div style="height: 2px; flex: 1; background: linear-gradient(90deg, #0088ff, transparent);"></div>
+        <span style="color: #0088ff; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+            [POST-MISSION ANALYSIS]
+        </span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+        <div class="stat-card" style="border-left: 4px solid #00ffff;">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">🎯</span>
+                <span style="font-size: 0.8rem; color: #00ff88; font-family: 'Orbitron', monospace;">[ACCURACY]</span>
+            </div>
+            <span class="stat-number">{{ correct_answers }}/{{ total_questions }}</span>
+            <span class="stat-label">CORRECT RESPONSES</span>
+            <div class="progress-bar" style="margin-top: 0.5rem;">
+                <div class="progress-fill" style="width: {{ percentage }}%; background: {{ 'linear-gradient(90deg, #00ff88, #0088ff)' if passed else 'linear-gradient(90deg, #ff4444, #ffaa00)' }};"></div>
+            </div>
+        </div>
+
+        <div class="stat-card" style="border-left: 4px solid {{ '#00ff88' if passed else '#ff4444' }};">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">📊</span>
+                <span style="font-size: 0.8rem; color: #00ff88; font-family: 'Orbitron', monospace;">[PERFORMANCE]</span>
+            </div>
+            <span class="stat-number">{{ percentage|int }}%</span>
+            <span class="stat-label">MISSION SCORE</span>
+            <div style="font-size: 0.8rem; color: {{ '#00ff88' if passed else '#ff4444' }}; margin-top: 0.5rem; font-family: 'Orbitron', monospace;">
+                {{ 'ABOVE THRESHOLD' if passed else 'BELOW THRESHOLD' }}
+            </div>
+        </div>
+
+        <div class="stat-card" style="border-left: 4px solid #ffaa00;">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">⚡</span>
+                <span style="font-size: 0.8rem; color: #00ff88; font-family: 'Orbitron', monospace;">[REWARD]</span>
+            </div>
+            <span class="stat-number">{{ points_earned }}</span>
+            <span class="stat-label">CYBER POINTS</span>
+            <div style="font-size: 0.8rem; color: {{ '#00ff88' if points_earned > 0 else '#666' }}; margin-top: 0.5rem; font-family: 'Orbitron', monospace;">
+                {{ 'EARNED' if points_earned > 0 else 'NO REWARD' }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+            <span style="margin-right: 0.5rem;">🏠</span>
+            RETURN TO COMMAND CENTER
+        </a>
+        {% if not passed %}
+        <a href="{{ url_for('module', module_id=module_id) }}" class="btn btn-secondary" style="font-size: 1.1rem; padding: 1rem 2rem; border-color: #ffaa00; color: #ffaa00;">
+            <span style="margin-right: 0.5rem;">🔄</span>
+            RETRY MISSION
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Detailed Analysis -->
+<div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+    <h2 style="color: #00ffff; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+        DETAILED ANALYSIS
+    </h2>
+    <div style="height: 2px; flex: 1; background: linear-gradient(90deg, #00ffff, transparent);"></div>
+    <span style="color: #00ffff; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+        [THREAT ASSESSMENT REPORT]
+    </span>
+</div>
+
+{% for i, result in enumerate(results) %}
+<div class="card" style="margin-bottom: 2rem; border-left: 4px solid {{ '#00ff88' if result['is_correct'] else '#ff4444' }}; position: relative; overflow: hidden;">
+    <!-- Question Header -->
+    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+        <div style="background: rgba({{ '0, 255, 136' if result['is_correct'] else '255, 68, 68' }}, 0.2); color: {{ '#00ff88' if result['is_correct'] else '#ff4444' }}; padding: 0.75rem 1.5rem; border-radius: 6px; font-family: 'Orbitron', monospace; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+            THREAT {{ i+1 }} ANALYSIS
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <span style="font-size: 2rem; animation: {{ 'glow-pulse' if result['is_correct'] else 'glitch' }} 2s ease-in-out infinite;">
+                {{ '✅' if result['is_correct'] else '❌' }}
+            </span>
+            <div style="text-align: right;">
+                <div style="color: {{ '#00ff88' if result['is_correct'] else '#ff4444' }}; font-weight: 700; font-family: 'Orbitron', monospace; font-size: 1.2rem; text-transform: uppercase;">
+                    {{ 'THREAT NEUTRALIZED' if result['is_correct'] else 'THREAT ACTIVE' }}
+                </div>
+                <div style="color: #a0c4ff; font-size: 0.9rem; font-family: 'Rajdhani', monospace;">
+                    Response Status: {{ 'CORRECT' if result['is_correct'] else 'INCORRECT' }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question Text -->
+    <div style="background: rgba(0, 0, 0, 0.3); padding: 2rem; border-radius: 8px; border: 1px solid rgba(0, 136, 255, 0.3); margin-bottom: 2rem;">
+        <h4 style="color: #00ffff; margin-bottom: 1rem; font-family: 'Rajdhani', monospace; font-size: 1.2rem; line-height: 1.4;">
+            {{ result['question'] }}
+        </h4>
+    </div>
+
+    <!-- Response Analysis -->
+    <div style="background: rgba({{ '0, 255, 136' if result['is_correct'] else '255, 68, 68' }}, 0.1); border: 2px solid rgba({{ '0, 255, 136' if result['is_correct'] else '255, 68, 68' }}, 0.3); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
+        <div style="display: grid; gap: 1.5rem;">
+            <!-- Agent Response -->
+            <div>
+                <div style="color: {{ '#00ff88' if result['is_correct'] else '#ff4444' }}; font-family: 'Orbitron', monospace; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem; text-transform: uppercase;">
+                    AGENT RESPONSE:
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 6px; border-left: 4px solid {{ '#00ff88' if result['is_correct'] else '#ff4444' }};">
+                    <div style="color: #a0c4ff; font-family: 'Rajdhani', monospace; font-size: 1.1rem; line-height: 1.4;">
+                        {% if 0 <= result['user_answer'] < result['options']|length %}
+                        {{ result['options'][result['user_answer']] }}
+                        {% else %}
+                        <span style="color: #ff4444; font-style: italic;">No response provided</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if not result['is_correct'] %}
+            <!-- Correct Response -->
+            <div>
+                <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem; text-transform: uppercase;">
+                    CORRECT RESPONSE:
+                </div>
+                <div style="background: rgba(0, 255, 136, 0.1); padding: 1.5rem; border-radius: 6px; border-left: 4px solid #00ff88;">
+                    <div style="color: #a0c4ff; font-family: 'Rajdhani', monospace; font-size: 1.1rem; line-height: 1.4;">
+                        {{ result['options'][result['correct_answer']] }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Tactical Analysis -->
+            <div>
+                <div style="color: #0088ff; font-family: 'Orbitron', monospace; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem; text-transform: uppercase;">
+                    TACTICAL ANALYSIS:
+                </div>
+                <div style="background: rgba(0, 136, 255, 0.1); padding: 1.5rem; border-radius: 6px; border-left: 4px solid #0088ff;">
+                    <div style="color: #a0c4ff; font-family: 'Rajdhani', monospace; font-size: 1.1rem; line-height: 1.5;">
+                        {{ result['explanation'] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scanning Line Effect -->
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, {{ '#00ff88' if result['is_correct'] else '#ff4444' }}, transparent); animation: scan-line 3s linear infinite; opacity: 0.7;"></div>
+</div>
+{% endfor %}
+
+<!-- Final Assessment -->
+<div class="card" style="background: linear-gradient(135deg, rgba(0, 136, 255, 0.1), rgba(0, 255, 255, 0.05)); border: 2px solid #0088ff; margin-top: 3rem;">
+    <div style="text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 1rem; animation: float 4s ease-in-out infinite;">🛡️</div>
+        <h3 style="color: #0088ff; font-family: 'Orbitron', monospace; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px;">
+            MISSION DEBRIEF COMPLETE
+        </h3>
+        <p style="color: #a0c4ff; font-family: 'Rajdhani', monospace; line-height: 1.6; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+            {% if passed %}
+            Excellent work, Agent. Your cybersecurity knowledge has been validated through combat simulation. Continue training to maintain operational readiness against evolving threats.
+            {% else %}
+            Mission parameters not met. Additional training recommended to improve threat recognition capabilities. Review tactical analysis and retry mission when prepared.
+            {% endif %}
+        </p>
+        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 6px; display: inline-block;">
+            <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                NEXT MISSION UNLOCK: {{ 'AVAILABLE' if passed else 'PENDING CURRENT COMPLETION' }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate statistics on load
+        setTimeout(() => {
+            animateCounters();
+        }, 1000);
+
+        // Add entrance animations for analysis cards
+        const analysisCards = document.querySelectorAll('.card');
+        analysisCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, (index + 1) * 200);
+        });
+
+        // Add sound effect simulation for correct/incorrect
+        const resultCards = document.querySelectorAll('[style*="THREAT"]');
+        resultCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const isCorrect = this.innerHTML.includes('NEUTRALIZED');
+                if (isCorrect) {
+                    this.style.animation = 'glow-pulse 0.5s ease-in-out';
+                } else {
+                    this.style.animation = 'glitch 0.3s ease-in-out';
+                }
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 500);
+            });
+        });
+    });
+
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+            const text = counter.textContent;
+            const isPercentage = text.includes('%');
+            const isFraction = text.includes('/');
+
+            if (isPercentage) {
+                const target = parseInt(text);
+                animatePercentage(counter, target);
+            } else if (isFraction) {
+                // Don't animate fractions, just show them
+                return;
+            } else {
+                const target = parseInt(text);
+                animateNumber(counter, target);
+            }
+        });
+    }
+
+    function animateNumber(element, target) {
+        const duration = 2000;
+        const increment = target / (duration / 16);
+        let current = 0;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current);
+        }, 16);
+    }
+
+    function animatePercentage(element, target) {
+        const duration = 2000;
+        const increment = target / (duration / 16);
+        let current = 0;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current) + '%';
+        }, 16);
+    }
+
+    // Add periodic scanning effect
+    setInterval(() => {
+        const scanLines = document.querySelectorAll('[style*="scan-line"]');
+        scanLines.forEach(line => {
+            line.style.animation = 'none';
+            setTimeout(() => {
+                line.style.animation = 'scan-line 3s linear infinite';
+            }, Math.random() * 1000);
+        });
+    }, 8000);
+</script>
+{% endblock %}

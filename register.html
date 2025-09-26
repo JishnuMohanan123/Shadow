@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - Agent Recruitment Portal{% endblock %}
+
+{% block content %}
+<div class="login-container" style="max-width: 500px; position: relative; overflow: hidden;">
+    <!-- Animated Background Elements -->
+    <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 1px, transparent 1px); background-size: 30px 30px; animation: float 15s linear infinite reverse; opacity: 0.3;"></div>
+
+    <div style="position: relative; z-index: 2;">
+        <!-- Recruitment Header -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem; animation: glow-pulse 3s ease-in-out infinite; filter: drop-shadow(0 0 20px #00ff88);">🛡️</div>
+            <h1 style="font-family: 'Orbitron', monospace; color: #00ffff; font-size: 2.2rem; margin-bottom: 0.5rem; text-shadow: 0 0 20px #00ffff; letter-spacing: 3px;">
+                AGENT RECRUITMENT
+            </h1>
+            <div style="color: #00ff88; margin-bottom: 0.5rem; font-size: 1.1rem; font-weight: 600; font-family: 'Rajdhani', monospace; letter-spacing: 2px; text-transform: uppercase;">
+                Elite Cyber Warfare Division
+            </div>
+            <div style="color: #a0c4ff; margin-bottom: 2rem; font-size: 0.9rem; font-family: 'Orbitron', monospace;">
+                Security Clearance Application Portal
+            </div>
+        </div>
+
+        <!-- Recruitment Requirements -->
+        <div style="background: rgba(0, 136, 255, 0.1); border: 1px solid rgba(0, 136, 255, 0.3); border-radius: 6px; padding: 1.5rem; margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="color: #0088ff; font-size: 1.1rem;">ℹ️</span>
+                <span style="color: #0088ff; font-weight: 600; font-family: 'Orbitron', monospace; font-size: 0.9rem; text-transform: uppercase;">
+                    Recruitment Requirements
+                </span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; font-size: 0.8rem; font-family: 'Rajdhani', monospace;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: #00ff88;">✓</span>
+                    <span style="color: #a0c4ff;">Security Mindset</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: #00ff88;">✓</span>
+                    <span style="color: #a0c4ff;">Technical Aptitude</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: #00ff88;">✓</span>
+                    <span style="color: #a0c4ff;">Tactical Thinking</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: #00ff88;">✓</span>
+                    <span style="color: #a0c4ff;">Classified Clearance</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <form method="POST" style="position: relative;">
+            <div class="form-group">
+                <label class="form-label" for="username">
+                    <span style="margin-right: 0.5rem;">🎯</span>
+                    Agent Codename
+                </label>
+                <div style="position: relative;">
+                    <input type="text" id="username" name="username" class="form-input" required minlength="3"
+                           placeholder="Choose your operational codename..."
+                           style="padding-left: 3rem; font-family: 'Orbitron', monospace; text-transform: uppercase; letter-spacing: 1px;">
+                    <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #00ffff; font-size: 1.2rem;">🏷️</div>
+                </div>
+                <div style="font-size: 0.8rem; color: #00ff88; margin-top: 0.5rem; font-family: 'Orbitron', monospace;">
+                    MIN 3 CHARACTERS • ALPHANUMERIC ONLY
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    <span style="margin-right: 0.5rem;">🔐</span>
+                    Security Protocol
+                </label>
+                <div style="position: relative;">
+                    <input type="password" id="password" name="password" class="form-input" required minlength="6"
+                           placeholder="Create secure access protocol..."
+                           style="padding-left: 3rem; font-family: 'Orbitron', monospace;">
+                    <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #00ffff; font-size: 1.2rem;">🔑</div>
+                </div>
+                <div style="font-size: 0.8rem; color: #00ff88; margin-top: 0.5rem; font-family: 'Orbitron', monospace;">
+                    MIN 6 CHARACTERS • SPECIAL CHARS RECOMMENDED
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">
+                    <span style="margin-right: 0.5rem;">📡</span>
+                    Communication Channel (Optional)
+                </label>
+                <div style="position: relative;">
+                    <input type="email" id="email" name="email" class="form-input"
+                           placeholder="secure.comms@encrypted.net"
+                           style="padding-left: 3rem; font-family: 'Orbitron', monospace;">
+                    <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #00ffff; font-size: 1.2rem;">📧</div>
+                </div>
+                <div style="font-size: 0.8rem; color: #a0c4ff; margin-top: 0.5rem; font-family: 'Orbitron', monospace;">
+                    ENCRYPTED COMMUNICATIONS ONLY
+                </div>
+            </div>
+
+            <!-- Security Assessment -->
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 6px; margin: 2rem 0; border: 1px solid rgba(0, 255, 255, 0.3);">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="width: 12px; height: 12px; background: #ffaa00; border-radius: 50%; animation: pulse-glow 1s ease-in-out infinite alternate;"></div>
+                    <span style="color: #ffaa00; font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">
+                        Security Assessment In Progress
+                    </span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; font-size: 0.8rem; font-family: 'Orbitron', monospace;">
+                    <div style="display: flex; justify-content: between;">
+                        <span style="color: #a0c4ff;">THREAT ANALYSIS:</span>
+                        <span style="color: #00ff88;">CLEAR</span>
+                    </div>
+                    <div style="display: flex; justify-content: between;">
+                        <span style="color: #a0c4ff;">BACKGROUND:</span>
+                        <span style="color: #ffaa00;">SCANNING</span>
+                    </div>
+                    <div style="display: flex; justify-content: between;">
+                        <span style="color: #a0c4ff;">CREDENTIALS:</span>
+                        <span style="color: #00ff88;">VERIFIED</span>
+                    </div>
+                    <div style="display: flex; justify-content: between;">
+                        <span style="color: #a0c4ff;">CLEARANCE:</span>
+                        <span style="color: #ffaa00;">PENDING</span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="registerBtn" style="width: 100%; margin-bottom: 2rem; font-size: 1.1rem; padding: 1rem;">
+                <span style="margin-right: 0.5rem;">🚀</span>
+                REQUEST SECURITY CLEARANCE
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div style="position: relative; text-align: center; margin: 2rem 0;">
+            <div style="height: 1px; background: linear-gradient(90deg, transparent, #00ffff, transparent);"></div>
+            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(10, 14, 26, 0.9); padding: 0 1rem; color: #00ffff; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                EXISTING AGENT
+            </span>
+        </div>
+
+        <!-- Login Link -->
+        <div style="text-align: center;">
+            <p style="margin-bottom: 1rem; color: #a0c4ff; font-family: 'Rajdhani', monospace;">
+                Already have security clearance? Access the system below.
+            </p>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary" style="width: 100%;">
+                <span style="margin-right: 0.5rem;">🔓</span>
+                ACCESS SECURE TERMINAL
+            </a>
+        </div>
+
+        <!-- Recruitment Notice -->
+        <div style="background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 6px; padding: 1rem; margin-top: 2rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <span style="color: #00ff88; font-size: 1.1rem;">🛡️</span>
+                <span style="color: #00ff88; font-weight: 600; font-family: 'Orbitron', monospace; font-size: 0.9rem; text-transform: uppercase;">
+                    Elite Division Notice
+                </span>
+            </div>
+            <p style="color: #a0c4ff; font-size: 0.8rem; line-height: 1.4; font-family: 'Rajdhani', monospace;">
+                Shadow 1834 recruits only the most skilled cybersecurity professionals. Upon approval, agents gain access to classified training modules designed to counter advanced persistent threats and state-sponsored cyber attacks.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Password strength indicator
+        const passwordInput = document.getElementById('password');
+        const strengthIndicator = document.createElement('div');
+        strengthIndicator.style.cssText = `
+        height: 4px;
+        margin-top: 0.5rem;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    `;
+
+        const strengthFill = document.createElement('div');
+        strengthFill.style.cssText = `
+        height: 100%;
+        width: 0%;
+        transition: all 0.3s ease;
+        border-radius: 2px;
+    `;
+        strengthIndicator.appendChild(strengthFill);
+        passwordInput.parentNode.appendChild(strengthIndicator);
+
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+
+            if (password.length >= 6) strength += 25;
+            if (password.match(/[a-z]/)) strength += 25;
+            if (password.match(/[A-Z]/)) strength += 25;
+            if (password.match(/[0-9!@#$%^&*]/)) strength += 25;
+
+            strengthFill.style.width = strength + '%';
+
+            if (strength <= 25) {
+                strengthFill.style.background = '#ff4444';
+            } else if (strength <= 50) {
+                strengthFill.style.background = '#ffaa00';
+            } else if (strength <= 75) {
+                strengthFill.style.background = '#0088ff';
+            } else {
+                strengthFill.style.background = '#00ff88';
+            }
+        });
+
+        // Username validation
+        const usernameInput = document.getElementById('username');
+        usernameInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+        });
+
+        // Form submission with cyber effects
+        const form = document.querySelector('form');
+        const registerBtn = document.getElementById('registerBtn');
+
+        form.addEventListener('submit', function(e) {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username.length < 3) {
+                e.preventDefault();
+                showCyberNotification('CODENAME TOO SHORT - MINIMUM 3 CHARACTERS REQUIRED', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                e.preventDefault();
+                showCyberNotification('SECURITY PROTOCOL INSUFFICIENT - MINIMUM 6 CHARACTERS', 'error');
+                return;
+            }
+
+            // Show processing state
+            registerBtn.innerHTML = '<span style="margin-right: 0.5rem;">⏳</span>PROCESSING CLEARANCE REQUEST...';
+            registerBtn.disabled = true;
+
+            // Add scanning effect
+            document.body.style.filter = 'brightness(1.1) hue-rotate(90deg)';
+            setTimeout(() => {
+                document.body.style.filter = '';
+            }, 500);
+        });
+
+        // Simulate system initialization
+        setTimeout(() => {
+            showCyberNotification('RECRUITMENT SYSTEM ONLINE - READY FOR APPLICATIONS', 'success');
+        }, 1500);
+
+        // Add typing sound effect simulation
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('keypress', function() {
+                // Could add subtle audio feedback here
+                this.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.3)';
+                setTimeout(() => {
+                    this.style.boxShadow = '';
+                }, 100);
+            });
+        });
+    });
+</script>
+
+<style>
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(1deg); }
+    }
+</style>
+{% endblock %}

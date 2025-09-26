@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - Secure Access Portal{% endblock %}
+
+{% block content %}
+<div class="login-container" style="position: relative; overflow: hidden;">
+    <!-- Animated Background Elements -->
+    <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 1px, transparent 1px); background-size: 20px 20px; animation: float 10s linear infinite; opacity: 0.3;"></div>
+
+    <div style="position: relative; z-index: 2;">
+        <!-- System Header -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem; animation: glow-pulse 3s ease-in-out infinite; filter: drop-shadow(0 0 20px #00ffff);">⚡</div>
+            <h1 style="font-family: 'Orbitron', monospace; color: #00ffff; font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 20px #00ffff; letter-spacing: 3px;">
+                SHADOW 1834
+            </h1>
+            <div style="color: #a0c4ff; margin-bottom: 0.5rem; font-size: 1.1rem; font-weight: 600; font-family: 'Rajdhani', monospace; letter-spacing: 2px;">
+                [CLASSIFIED CYBER WARFARE DIVISION]
+            </div>
+            <div style="color: #00ff88; margin-bottom: 2rem; font-size: 0.9rem; font-family: 'Orbitron', monospace; text-transform: uppercase;">
+                Secure Access Terminal
+            </div>
+
+            <!-- System Status Bar -->
+            <div style="background: rgba(0, 0, 0, 0.5); padding: 0.75rem; border-radius: 6px; margin-bottom: 2rem; border: 1px solid rgba(0, 255, 255, 0.3); font-family: 'Orbitron', monospace; font-size: 0.8rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem;">
+                    <div>
+                        <div style="color: #00ff88;">FIREWALL</div>
+                        <div style="color: #00ffff; font-weight: bold;">ACTIVE</div>
+                    </div>
+                    <div>
+                        <div style="color: #00ff88;">ENCRYPTION</div>
+                        <div style="color: #00ffff; font-weight: bold;">AES-256</div>
+                    </div>
+                    <div>
+                        <div style="color: #00ff88;">STATUS</div>
+                        <div style="color: #00ff88; font-weight: bold;">SECURE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <form method="POST" action="{{ url_for('login') }}" style="position: relative;">
+            <div class="form-group">
+                <label class="form-label" for="username">
+                    <span style="margin-right: 0.5rem;">🎯</span>
+                    AGENT IDENTIFICATION
+                </label>
+                <div style="position: relative;">
+                    <input type="text" id="username" name="username" class="form-input" required
+                           placeholder="Enter agent codename..."
+                           style="padding-left: 3rem; font-family: 'Orbitron', monospace; text-transform: uppercase; letter-spacing: 1px;">
+                    <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #00ffff; font-size: 1.2rem;">👤</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    <span style="margin-right: 0.5rem;">🔐</span>
+                    SECURITY CLEARANCE
+                </label>
+                <div style="position: relative;">
+                    <input type="password" id="password" name="password" class="form-input" required
+                           placeholder="Enter access code..."
+                           style="padding-left: 3rem; font-family: 'Orbitron', monospace;">
+                    <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #00ffff; font-size: 1.2rem;">🔑</div>
+                </div>
+            </div>
+
+            <!-- Biometric Simulation -->
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 6px; margin: 2rem 0; border: 1px solid rgba(0, 255, 255, 0.3);">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <div style="width: 12px; height: 12px; background: #00ff88; border-radius: 50%; animation: pulse-glow 1s ease-in-out infinite alternate;"></div>
+                    <span style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 600;">
+                        BIOMETRIC SCANNER ACTIVE
+                    </span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; font-size: 0.8rem; font-family: 'Orbitron', monospace;">
+                    <div style="color: #00ff88;">RETINAL: ✓</div>
+                    <div style="color: #00ff88;">THERMAL: ✓</div>
+                    <div style="color: #00ff88;">NEURAL: ✓</div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 2rem; font-size: 1.1rem; padding: 1rem;">
+                <span style="margin-right: 0.5rem;">🚀</span>
+                INITIATE SECURE CONNECTION
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div style="position: relative; text-align: center; margin: 2rem 0;">
+            <div style="height: 1px; background: linear-gradient(90deg, transparent, #00ffff, transparent);"></div>
+            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(10, 14, 26, 0.9); padding: 0 1rem; color: #00ffff; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                NEW AGENT RECRUITMENT
+            </span>
+        </div>
+
+        <!-- Registration Section -->
+        <div style="text-align: center;">
+            <p style="margin-bottom: 1rem; color: #a0c4ff; font-family: 'Rajdhani', monospace;">
+                Not authorized for access? Request clearance below.
+            </p>
+            <a href="{{ url_for('register') }}" class="btn btn-secondary" style="width: 100%;">
+                <span style="margin-right: 0.5rem;">📋</span>
+                REQUEST SECURITY CLEARANCE
+            </a>
+        </div>
+
+        <!-- Security Notice -->
+        <div style="background: rgba(255, 68, 68, 0.1); border: 1px solid rgba(255, 68, 68, 0.3); border-radius: 6px; padding: 1rem; margin-top: 2rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <span style="color: #ff4444; font-size: 1.1rem;">⚠️</span>
+                <span style="color: #ff4444; font-weight: 600; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                    SECURITY NOTICE
+                </span>
+            </div>
+            <p style="color: #a0c4ff; font-size: 0.8rem; line-height: 1.4; font-family: 'Rajdhani', monospace;">
+                All access attempts are monitored and logged. Unauthorized access is strictly prohibited and may result in immediate termination of clearance privileges.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add typing effect to placeholder text
+        const inputs = document.querySelectorAll('.form-input');
+
+        inputs.forEach(input => {
+            const originalPlaceholder = input.placeholder;
+            input.placeholder = '';
+
+            // Typing animation for placeholder
+            let i = 0;
+            const typeInterval = setInterval(() => {
+                if (i < originalPlaceholder.length) {
+                    input.placeholder += originalPlaceholder.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                }
+            }, 50);
+
+            // Clear placeholder when focused
+            input.addEventListener('focus', function() {
+                this.placeholder = '';
+            });
+
+            input.addEventListener('blur', function() {
+                if (this.value === '') {
+                    this.placeholder = originalPlaceholder;
+                }
+            });
+
+            // Add scanning effect on input
+            input.addEventListener('input', function() {
+                this.style.boxShadow = '0 0 25px rgba(0, 255, 255, 0.5)';
+                setTimeout(() => {
+                    this.style.boxShadow = '';
+                }, 300);
+            });
+        });
+
+        // Add glitch effect to login button
+        const loginBtn = document.querySelector('button[type="submit"]');
+        loginBtn.addEventListener('mouseenter', function() {
+            this.style.animation = 'glitch 0.3s ease-in-out';
+            setTimeout(() => {
+                this.style.animation = '';
+            }, 300);
+        });
+
+        // Simulate system boot sequence
+        setTimeout(() => {
+            showCyberNotification('SYSTEM ONLINE - AWAITING CREDENTIALS', 'success');
+        }, 1000);
+
+        // Add form validation with cyber theme
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                e.preventDefault();
+                showCyberNotification('AUTHENTICATION FAILED - MISSING CREDENTIALS', 'error');
+                return;
+            }
+
+            // Show loading state
+            loginBtn.innerHTML = '<span style="margin-right: 0.5rem;">⏳</span>AUTHENTICATING...';
+            loginBtn.disabled = true;
+
+            // Add scanning effect
+            document.body.style.animation = 'scan-line 0.5s linear 3';
+        });
+    });
+
+    // Keyboard shortcuts for cyber feel
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'Enter') {
+            document.querySelector('form').submit();
+        }
+    });
+</script>
+
+<style>
+    @keyframes scan-line {
+        0%, 100% { filter: brightness(1); }
+        50% { filter: brightness(1.2) hue-rotate(180deg); }
+    }
+</style>
+{% endblock %}
