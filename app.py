@@ -122,7 +122,7 @@ MODULES = {
             {
                 'text': 'Which file extension is most likely to contain malware?',
                 'options': [
-                    'document.pdf',4
+                    'document.pdf',
                     'photo.jpg',
                     'invoice.pdf.exe',
                     'music.mp3'
