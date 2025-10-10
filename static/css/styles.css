@@ -111,7 +111,7 @@ body::before {
 
 .nav {
     display: grid;
-    grid-template-columns: minmax(200px, auto) 1fr minmax(250px, auto);
+    grid-template-columns: minmax(200px, 1fr) auto minmax(200px, 1fr);
     align-items: center;
     gap: 2rem;
     max-width: 1400px;
@@ -173,6 +173,9 @@ body::before {
     scrollbar-width: none;
     padding: 0;
     margin: 0;
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .nav-links::-webkit-scrollbar {
