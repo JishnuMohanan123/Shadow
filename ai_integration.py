@@ -1,6 +1,7 @@
 """
-AI Integration for Shadow1834 using DeepSeek (Free & Open Source)
-Provides AI-powered assistance using DeepSeek's free API
+AI Integration for Shadow1834
+Supports both Ollama (FREE local AI) and DeepSeek API
+Ollama is recommended - 100% FREE, no API key needed!
 """
 
 import os
@@ -20,34 +21,58 @@ except ImportError:
 
 class AIAssistant:
     """
-    DeepSeek AI Assistant for cybersecurity training platform
-    Provides intelligent help, hints, and explanations using free DeepSeek API
+    AI Assistant for cybersecurity training platform
+    Supports Ollama (FREE, local) and DeepSeek API
     """
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, use_ollama: bool = True):
         """
-        Initialize AI Assistant with DeepSeek
+        Initialize AI Assistant
 
         Args:
-            api_key: DeepSeek API key (if not provided, reads from environment)
+            api_key: DeepSeek API key (optional if using Ollama)
+            use_ollama: Try Ollama first (FREE, local AI)
         """
-        self.api_key = api_key or os.environ.get('DEEPSEEK_API_KEY', 'free-tier-key')
         self.client = None
-        self.model = "deepseek-chat"  # Free model
+        self.model = "llama3.2"  # Default Ollama model
+        self.using_ollama = False
 
         if not OPENAI_AVAILABLE:
-            logger.error("OpenAI package not installed (required for DeepSeek)")
+            logger.error("OpenAI package not installed. Install with: pip install openai")
+            return
+
+        # Try Ollama first (FREE!)
+        if use_ollama:
+            try:
+                self.client = OpenAI(
+                    base_url="http://localhost:11434/v1",
+                    api_key="ollama"  # Ollama doesn't need real key
+                )
+                # Test if Ollama is running
+                self.client.models.list()
+                self.using_ollama = True
+                logger.info("✅ Ollama AI initialized successfully (FREE, local)")
+                return
+            except Exception as e:
+                logger.warning(f"Ollama not available, trying DeepSeek API: {e}")
+
+        # Fall back to DeepSeek API
+        self.api_key = api_key or os.environ.get('DEEPSEEK_API_KEY', '')
+        if not self.api_key:
+            logger.error("No DEEPSEEK_API_KEY found and Ollama not running")
+            logger.info("Install Ollama for FREE AI: https://ollama.com/download")
             return
 
         try:
-            # DeepSeek uses OpenAI-compatible API
             self.client = OpenAI(
                 api_key=self.api_key,
                 base_url="https://api.deepseek.com"
             )
-            logger.info("DeepSeek AI Assistant initialized successfully")
+            self.model = "deepseek-chat"
+            self.using_ollama = False
+            logger.info("✅ DeepSeek API initialized successfully")
         except Exception as e:
-            logger.error(f"Failed to initialize DeepSeek: {e}")
+            logger.error(f"Failed to initialize AI: {e}")
 
     def is_available(self) -> bool:
         """Check if AI integration is available"""
@@ -328,27 +353,64 @@ def analyze_progress(user_data: Dict) -> Optional[str]:
 
 if __name__ == '__main__':
     # Test the integration
-    print("Testing DeepSeek AI Integration...")
+    import sys
+
+    # Fix encoding for Windows
+    if sys.platform == 'win32':
+        sys.stdout.reconfigure(encoding='utf-8')
+
+    print("Testing AI Integration...")
+    print("=" * 60)
     assistant = AIAssistant()
 
     if assistant.is_available():
-        print("✅ DeepSeek AI is available")
+        if assistant.using_ollama:
+            print("✅ Using Ollama (FREE, Local AI)")
+            print(f"📦 Model: {assistant.model}")
+            print("💰 Cost: $0 - FREE Forever!")
+        else:
+            print("✅ Using DeepSeek API")
+            print(f"📦 Model: {assistant.model}")
+            print("💰 Cost: Pay per use")
 
         # Test hint generation
-        print("\nTesting hint generation...")
+        print("\n" + "=" * 60)
+        print("Test 1: Hint Generation")
+        print("=" * 60)
         hint = assistant.get_hint(
             "What should you do if you receive a suspicious email?",
             "This is about phishing detection"
         )
-        print(f"📝 Hint: {hint}")
+        if hint:
+            print(f"✅ Hint generated successfully!")
+            print(f"📝 {hint[:200]}..." if len(hint) > 200 else f"📝 {hint}")
+        else:
+            print("❌ Failed to generate hint")
 
         # Test chat
-        print("\nTesting chat...")
-        response = assistant.chat("What is phishing?")
-        print(f"💬 Response: {response}")
+        print("\n" + "=" * 60)
+        print("Test 2: Chat Function")
+        print("=" * 60)
+        response = assistant.chat("What is phishing in simple terms?")
+        if response:
+            print(f"✅ Chat response received!")
+            print(f"💬 {response[:200]}..." if len(response) > 200 else f"💬 {response}")
+        else:
+            print("❌ Failed to get chat response")
+
+        print("\n" + "=" * 60)
+        print("✅ All tests completed!")
+        print("=" * 60)
 
     else:
-        print("❌ DeepSeek AI is not available. Install openai package:")
-        print("   pip install openai")
-        print("\nOptional: Set DEEPSEEK_API_KEY environment variable")
-        print("   (DeepSeek works without key but has rate limits)")
+        print("❌ AI is not available")
+        print("\n📋 Setup Options:")
+        print("\n🆓 Option 1: Ollama (FREE - Recommended)")
+        print("   1. Download: https://ollama.com/download")
+        print("   2. Install OllamaSetup.exe")
+        print("   3. Run: ollama pull llama3.2")
+        print("   4. Done! No API key needed")
+        print("\n💳 Option 2: DeepSeek API")
+        print("   1. Get API key: https://platform.deepseek.com")
+        print("   2. Set: $env:DEEPSEEK_API_KEY='your-key'")
+        print("   3. Add credits to account")
