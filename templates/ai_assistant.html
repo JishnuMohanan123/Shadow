@@ -7,13 +7,13 @@
     <div class="hero-content">
         <div class="hero-icon" style="font-size: 3rem;">🤖</div>
         <div class="hero-text">
-            <h1 class="hero-title">CLAUDE AI ASSISTANT</h1>
-            <p class="hero-subtitle">[POWERED BY ANTHROPIC CLAUDE]</p>
+            <h1 class="hero-title">AI ASSISTANT</h1>
+            <p class="hero-subtitle">[POWERED BY DEEPSEEK - FREE & OPEN SOURCE]</p>
         </div>
     </div>
 </div>
 
-{% if not claude_available %}
+{% if not ai_available %}
 <div class="alert alert-warning" role="alert">
     <span class="alert-icon">⚠️</span>
     <div>
@@ -45,11 +45,11 @@
                 </div>
                 <div style="flex: 1; background: rgba(0, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.3); border-radius: 12px; padding: 1rem;">
                     <div style="font-weight: 600; color: var(--text-accent); margin-bottom: 0.5rem; font-family: 'Orbitron', monospace;">
-                        Claude AI Assistant
+                        DeepSeek AI Assistant
                     </div>
                     <div style="color: var(--text-primary); line-height: 1.6;">
                         Hello, Agent {{ user[1]|upper }}! 👋<br><br>
-                        I'm Claude, your AI cybersecurity training assistant. I can help you with:
+                        I'm your AI cybersecurity training assistant powered by DeepSeek. I can help you with:
                         <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
                             <li>Understanding security concepts</li>
                             <li>Getting hints for training modules</li>
@@ -69,13 +69,13 @@
                 id="chat-input"
                 placeholder="Type your message here..."
                 style="flex: 1; padding: 1rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Rajdhani', monospace; font-size: 1rem;"
-                {% if not claude_available %}disabled{% endif %}
+                {% if not ai_available %}disabled{% endif %}
             >
             <button
                 id="send-button"
                 class="btn btn-primary"
                 style="padding: 1rem 2rem; min-width: 120px;"
-                {% if not claude_available %}disabled{% endif %}
+                {% if not ai_available %}disabled{% endif %}
             >
                 <span style="margin-right: 0.5rem;">📤</span>
                 SEND
@@ -88,7 +88,7 @@
                 <span style="animation: typing 1.4s infinite; animation-delay: 0.2s;">●</span>
                 <span style="animation: typing 1.4s infinite; animation-delay: 0.4s;">●</span>
             </span>
-            Claude is thinking...
+            AI is thinking...
         </div>
     </div>
 
@@ -100,7 +100,7 @@
         </h3>
 
         <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <button class="quick-action-btn" onclick="quickAction('hint')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not claude_available %}disabled{% endif %}>
+            <button class="quick-action-btn" onclick="quickAction('hint')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not ai_available %}disabled{% endif %}>
                 <span style="font-size: 1.5rem;">💡</span>
                 <div>
                     <div style="font-weight: 600;">Get a Hint</div>
@@ -108,7 +108,7 @@
                 </div>
             </button>
 
-            <button class="quick-action-btn" onclick="quickAction('practice')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not claude_available %}disabled{% endif %}>
+            <button class="quick-action-btn" onclick="quickAction('practice')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not ai_available %}disabled{% endif %}>
                 <span style="font-size: 1.5rem;">📝</span>
                 <div>
                     <div style="font-weight: 600;">Practice Question</div>
@@ -116,7 +116,7 @@
                 </div>
             </button>
 
-            <button class="quick-action-btn" onclick="quickAction('progress')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not claude_available %}disabled{% endif %}>
+            <button class="quick-action-btn" onclick="quickAction('progress')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not ai_available %}disabled{% endif %}>
                 <span style="font-size: 1.5rem;">📊</span>
                 <div>
                     <div style="font-weight: 600;">Analyze Progress</div>
@@ -124,7 +124,7 @@
                 </div>
             </button>
 
-            <button class="quick-action-btn" onclick="quickAction('explain')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not claude_available %}disabled{% endif %}>
+            <button class="quick-action-btn" onclick="quickAction('explain')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not ai_available %}disabled{% endif %}>
                 <span style="font-size: 1.5rem;">🎓</span>
                 <div>
                     <div style="font-weight: 600;">Explain Concept</div>
@@ -209,7 +209,7 @@ async function sendMessage() {
     document.getElementById('typing-indicator').style.display = 'flex';
 
     try {
-        const response = await fetch('/api/claude/chat', {
+        const response = await fetch('/api/ai/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -305,7 +305,7 @@ async function analyzeProgress() {
     document.getElementById('typing-indicator').style.display = 'flex';
 
     try {
-        const response = await fetch('/api/claude/analyze-progress');
+        const response = await fetch('/api/ai/analyze-progress');
         const data = await response.json();
 
         if (data.success) {

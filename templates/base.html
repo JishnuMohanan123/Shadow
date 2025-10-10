@@ -66,10 +66,10 @@
                 </a>
             </li>
             <li role="none">
-                <a href="{{ url_for('claude_assistant_page') }}"
-                   {% if request.endpoint == 'claude_assistant_page' %}class="active"{% endif %}
+                <a href="{{ url_for('ai_assistant_page') }}"
+                   {% if request.endpoint == 'ai_assistant_page' %}class="active"{% endif %}
                    role="menuitem"
-                   aria-current="{% if request.endpoint == 'claude_assistant_page' %}page{% endif %}">
+                   aria-current="{% if request.endpoint == 'ai_assistant_page' %}page{% endif %}">
                     <span class="nav-icon" aria-hidden="true" role="img" aria-label="AI Assistant">🤖</span>
                     <span class="nav-text">AI ASSISTANT</span>
                 </a>

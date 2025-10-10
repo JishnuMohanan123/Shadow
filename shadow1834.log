@@ -1625,3 +1625,127 @@
 2025-10-10 15:19:49,718 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:19:49] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
 2025-10-10 15:19:49,719 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:19:49] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
 2025-10-10 15:19:53,402 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:19:53] "[36mGET /static/favicon.svg HTTP/1.1[0m" 304 -
+2025-10-10 15:40:57,121 - __main__ - INFO - Database initialized successfully
+2025-10-10 15:40:57,367 - claude_integration - WARNING - Anthropic package not installed. Install with: pip install anthropic
+2025-10-10 15:40:57,369 - claude_routes - INFO - Claude AI routes registered successfully
+2025-10-10 15:40:57,389 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.5.30.241:5000
+2025-10-10 15:40:57,390 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-10-10 15:40:57,391 - werkzeug - INFO -  * Restarting with stat
+2025-10-10 15:40:57,843 - __main__ - INFO - Database initialized successfully
+2025-10-10 15:40:58,077 - claude_integration - WARNING - Anthropic package not installed. Install with: pip install anthropic
+2025-10-10 15:40:58,079 - claude_routes - INFO - Claude AI routes registered successfully
+2025-10-10 15:40:58,092 - werkzeug - WARNING -  * Debugger is active!
+2025-10-10 15:40:58,096 - werkzeug - INFO -  * Debugger PIN: 133-093-297
+2025-10-10 15:41:05,106 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:05] "[32mGET / HTTP/1.1[0m" 302 -
+2025-10-10 15:41:05,294 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:05] "GET /dashboard HTTP/1.1" 200 -
+2025-10-10 15:41:05,524 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:05] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:41:05,527 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:05] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:05,530 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:05] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:05,542 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:05] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:05,549 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:05] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:05,556 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:05] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:05,560 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:05] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:12,762 - claude_integration - ERROR - Anthropic package not installed
+2025-10-10 15:41:12,775 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:12] "GET /claude-assistant HTTP/1.1" 200 -
+2025-10-10 15:41:12,810 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:12] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:41:12,813 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:12] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:12,819 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:12] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:12,820 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:12] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:12,825 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:12] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:12,828 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:12] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:41:12,830 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:41:12] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:46,795 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:46] "GET /profile HTTP/1.1" 200 -
+2025-10-10 15:43:46,836 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:46] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:43:46,841 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:46] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:46,846 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:46] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:46,850 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:46] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:46,853 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:46] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:46,860 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:46] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:46,862 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:46] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:53,058 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:53] "GET /leaderboard HTTP/1.1" 200 -
+2025-10-10 15:43:53,096 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:53] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:43:53,099 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:53] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:53,105 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:53] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:53,106 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:53] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:53,114 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:53] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:53,114 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:53] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:53,115 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:53] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:54,654 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:54] "GET /dashboard HTTP/1.1" 200 -
+2025-10-10 15:43:54,692 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:54] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:43:54,696 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:54] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:54,700 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:54] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:54,702 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:54] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:54,707 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:54] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:54,709 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:54] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:43:54,711 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:43:54] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:06,995 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:06] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-10-10 15:44:07,009 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:07] "GET / HTTP/1.1" 200 -
+2025-10-10 15:44:07,056 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:07] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:44:07,059 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:07] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:07,064 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:07] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:07,068 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:07] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:07,077 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:07] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:07,078 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:07] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:07,085 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:07] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:13,109 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:13] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-10-10 15:44:13,116 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:13] "GET / HTTP/1.1" 200 -
+2025-10-10 15:44:13,160 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:13] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:13,160 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:13] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:13,160 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:13] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:44:13,163 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:13] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:13,169 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:13] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:13,172 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:13] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:13,175 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:13] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:28,231 - app - WARNING - Account locked for user: jishnu
+2025-10-10 15:44:28,244 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:28] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-10-10 15:44:28,251 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:28] "GET / HTTP/1.1" 200 -
+2025-10-10 15:44:28,292 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:28] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:44:28,296 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:28] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:28,300 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:28] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:28,301 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:28] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:28,306 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:28] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:28,310 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:28] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:44:28,312 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:44:28] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:25,271 - __main__ - INFO - Database initialized successfully
+2025-10-10 15:48:25,505 - claude_integration - WARNING - Anthropic package not installed. Install with: pip install anthropic
+2025-10-10 15:48:25,508 - claude_routes - INFO - Claude AI routes registered successfully
+2025-10-10 15:48:25,529 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.5.30.241:5000
+2025-10-10 15:48:25,529 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-10-10 15:48:25,530 - werkzeug - INFO -  * Restarting with stat
+2025-10-10 15:48:25,989 - __main__ - INFO - Database initialized successfully
+2025-10-10 15:48:26,230 - claude_integration - WARNING - Anthropic package not installed. Install with: pip install anthropic
+2025-10-10 15:48:26,232 - claude_routes - INFO - Claude AI routes registered successfully
+2025-10-10 15:48:26,247 - werkzeug - WARNING -  * Debugger is active!
+2025-10-10 15:48:26,251 - werkzeug - INFO -  * Debugger PIN: 133-093-297
+2025-10-10 15:48:32,252 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:32] "GET / HTTP/1.1" 200 -
+2025-10-10 15:48:32,478 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:32] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:48:32,482 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:32] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:32,483 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:32] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:32,507 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:32] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:32,509 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:32] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:32,513 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:32] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:32,517 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:32] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:39,662 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:39] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-10-10 15:48:39,746 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:39] "GET /dashboard HTTP/1.1" 200 -
+2025-10-10 15:48:39,785 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:39] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:48:39,789 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:39] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:39,792 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:39] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:39,796 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:39] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:39,799 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:39] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:39,804 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:39] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:39,806 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:39] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:43,283 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:43] "GET /module/1 HTTP/1.1" 200 -
+2025-10-10 15:48:43,330 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:43] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2025-10-10 15:48:43,340 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:43] "[36mGET /static/js/dashboard-interactive.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:43,341 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:43] "[36mGET /static/js/base.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:43,342 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:43] "[36mGET /static/js/interactive-animations.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:43,345 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:43] "[36mGET /static/js/achievements.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:43,352 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:43] "[36mGET /static/js/email-simulator.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:43,357 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:43] "[36mGET /static/js/health-meter.js HTTP/1.1[0m" 304 -
+2025-10-10 15:48:48,350 - werkzeug - INFO - 10.5.30.241 - - [10/Oct/2025 15:48:48] "[36mGET /static/favicon.svg HTTP/1.1[0m" 304 -

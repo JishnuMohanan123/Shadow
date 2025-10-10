@@ -1,14 +1,14 @@
 """
-Flask routes for Claude AI integration
-Add these routes to your main routes.py file
+Flask routes for DeepSeek AI integration
+FREE and OPEN SOURCE AI Assistant
 """
 
-from flask import request, session, jsonify, render_template
-from claude_integration import (
-    get_claude_assistant,
+from flask import request, session, jsonify, render_template, redirect, url_for
+from ai_integration import (
+    get_ai_assistant,
     get_hint,
     explain_answer,
-    chat_with_claude,
+    chat_with_ai,
     generate_practice_question,
     analyze_progress
 )
@@ -18,12 +18,12 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def register_claude_routes(app):
-    """Register Claude AI routes with Flask app"""
+def register_ai_routes(app):
+    """Register DeepSeek AI routes with Flask app"""
 
-    @app.route('/api/claude/chat', methods=['POST'])
-    def claude_chat():
-        """Chat with Claude AI assistant"""
+    @app.route('/api/ai/chat', methods=['POST'])
+    def ai_chat():
+        """Chat with DeepSeek AI assistant"""
         if 'user_id' not in session:
             return jsonify({'error': 'Not authenticated'}), 401
 
@@ -35,13 +35,13 @@ def register_claude_routes(app):
             if not message:
                 return jsonify({'error': 'No message provided'}), 400
 
-            # Get response from Claude
-            response = chat_with_claude(message, history)
+            # Get response from DeepSeek
+            response = chat_with_ai(message, history)
 
             if response is None:
                 return jsonify({
-                    'error': 'Claude is not available',
-                    'message': 'AI assistant is currently unavailable. Please try again later.'
+                    'error': 'AI is not available',
+                    'message': 'AI assistant is currently unavailable. Please check your setup.'
                 }), 503
 
             return jsonify({
@@ -50,11 +50,11 @@ def register_claude_routes(app):
             })
 
         except Exception as e:
-            logger.error(f"Error in Claude chat: {e}")
+            logger.error(f"Error in AI chat: {e}")
             return jsonify({'error': 'Internal server error'}), 500
 
-    @app.route('/api/claude/hint', methods=['POST'])
-    def claude_hint():
+    @app.route('/api/ai/hint', methods=['POST'])
+    def ai_hint():
         """Get a hint for a question"""
         if 'user_id' not in session:
             return jsonify({'error': 'Not authenticated'}), 401
@@ -84,8 +84,8 @@ def register_claude_routes(app):
             logger.error(f"Error getting hint: {e}")
             return jsonify({'error': 'Internal server error'}), 500
 
-    @app.route('/api/claude/explain', methods=['POST'])
-    def claude_explain():
+    @app.route('/api/ai/explain', methods=['POST'])
+    def ai_explain():
         """Get enhanced explanation for an answer"""
         if 'user_id' not in session:
             return jsonify({'error': 'Not authenticated'}), 401
@@ -116,8 +116,8 @@ def register_claude_routes(app):
             logger.error(f"Error explaining answer: {e}")
             return jsonify({'error': 'Internal server error'}), 500
 
-    @app.route('/api/claude/practice-question', methods=['POST'])
-    def claude_practice():
+    @app.route('/api/ai/practice-question', methods=['POST'])
+    def ai_practice():
         """Generate a practice question"""
         if 'user_id' not in session:
             return jsonify({'error': 'Not authenticated'}), 401
@@ -144,8 +144,8 @@ def register_claude_routes(app):
             logger.error(f"Error generating question: {e}")
             return jsonify({'error': 'Internal server error'}), 500
 
-    @app.route('/api/claude/analyze-progress', methods=['GET'])
-    def claude_analyze():
+    @app.route('/api/ai/analyze-progress', methods=['GET'])
+    def ai_analyze():
         """Get personalized progress analysis"""
         if 'user_id' not in session:
             return jsonify({'error': 'Not authenticated'}), 401
@@ -181,9 +181,9 @@ def register_claude_routes(app):
             logger.error(f"Error analyzing progress: {e}")
             return jsonify({'error': 'Internal server error'}), 500
 
-    @app.route('/claude-assistant')
-    def claude_assistant_page():
-        """Claude AI assistant chat interface"""
+    @app.route('/ai-assistant')
+    def ai_assistant_page():
+        """DeepSeek AI assistant chat interface"""
         if 'user_id' not in session:
             return redirect(url_for('index'))
 
@@ -192,15 +192,15 @@ def register_claude_routes(app):
         if not user:
             return redirect(url_for('logout'))
 
-        assistant = get_claude_assistant()
+        assistant = get_ai_assistant()
 
-        return render_template('claude_assistant.html',
+        return render_template('ai_assistant.html',
                              user=user,
-                             claude_available=assistant.is_available())
+                             ai_available=assistant.is_available())
 
-    logger.info("Claude AI routes registered successfully")
+    logger.info("✅ DeepSeek AI routes registered successfully")
 
 
 # For standalone testing
 if __name__ == '__main__':
-    print("Claude routes module - import and call register_claude_routes(app)")
+    print("AI routes module - import and call register_ai_routes(app)")

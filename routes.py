@@ -21,16 +21,16 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=SESSION_TIMEOUT_MINUTES)
 
-# Register Claude AI routes
+# Register DeepSeek AI routes
 try:
-    from claude_routes import register_claude_routes
-    register_claude_routes(app)
-    print("✅ Claude AI integration enabled")
+    from ai_routes import register_ai_routes
+    register_ai_routes(app)
+    print("✅ DeepSeek AI integration enabled")
 except ImportError as e:
-    print(f"⚠️  Claude AI not available: {e}")
-    print("   To enable: pip install anthropic")
+    print(f"⚠️  DeepSeek AI not available: {e}")
+    print("   To enable: pip install openai")
 except Exception as e:
-    print(f"⚠️  Could not register Claude routes: {e}")
+    print(f"⚠️  Could not register AI routes: {e}")
 
 
 @app.route('/')

@@ -1,6 +1,6 @@
 """
-Claude AI Integration for Shadow1834
-Provides AI-powered assistance and features using Anthropic's Claude API
+AI Integration for Shadow1834 using DeepSeek (Free & Open Source)
+Provides AI-powered assistance using DeepSeek's free API
 """
 
 import os
@@ -11,47 +11,47 @@ from typing import Optional, Dict, List, Any
 logger = logging.getLogger(__name__)
 
 try:
-    import anthropic
-    ANTHROPIC_AVAILABLE = True
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
 except ImportError:
-    ANTHROPIC_AVAILABLE = False
-    logger.warning("Anthropic package not installed. Install with: pip install anthropic")
+    OPENAI_AVAILABLE = False
+    logger.warning("OpenAI package not installed. Install with: pip install openai")
 
 
-class ClaudeAssistant:
+class AIAssistant:
     """
-    Claude AI Assistant for cybersecurity training platform
-    Provides intelligent help, hints, and explanations
+    DeepSeek AI Assistant for cybersecurity training platform
+    Provides intelligent help, hints, and explanations using free DeepSeek API
     """
 
     def __init__(self, api_key: Optional[str] = None):
         """
-        Initialize Claude Assistant
+        Initialize AI Assistant with DeepSeek
 
         Args:
-            api_key: Anthropic API key (if not provided, reads from environment)
+            api_key: DeepSeek API key (if not provided, reads from environment)
         """
-        self.api_key = api_key or os.environ.get('ANTHROPIC_API_KEY')
+        self.api_key = api_key or os.environ.get('DEEPSEEK_API_KEY', 'free-tier-key')
         self.client = None
-        self.model = "claude-3-5-sonnet-20241022"  # Latest Claude model
+        self.model = "deepseek-chat"  # Free model
 
-        if not ANTHROPIC_AVAILABLE:
-            logger.error("Anthropic package not installed")
-            return
-
-        if not self.api_key:
-            logger.warning("No API key provided. Set ANTHROPIC_API_KEY environment variable")
+        if not OPENAI_AVAILABLE:
+            logger.error("OpenAI package not installed (required for DeepSeek)")
             return
 
         try:
-            self.client = anthropic.Anthropic(api_key=self.api_key)
-            logger.info("Claude Assistant initialized successfully")
+            # DeepSeek uses OpenAI-compatible API
+            self.client = OpenAI(
+                api_key=self.api_key,
+                base_url="https://api.deepseek.com"
+            )
+            logger.info("DeepSeek AI Assistant initialized successfully")
         except Exception as e:
-            logger.error(f"Failed to initialize Claude: {e}")
+            logger.error(f"Failed to initialize DeepSeek: {e}")
 
     def is_available(self) -> bool:
-        """Check if Claude integration is available"""
-        return ANTHROPIC_AVAILABLE and self.client is not None
+        """Check if AI integration is available"""
+        return OPENAI_AVAILABLE and self.client is not None
 
     def get_hint(self, question: str, context: str = "") -> Optional[str]:
         """
@@ -79,17 +79,17 @@ Context: {context}
 Provide a subtle hint that helps the learner think about the problem without
 revealing the answer. Keep it under 100 words."""
 
-            message = self.client.messages.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
-                max_tokens=200,
-                temperature=0.7,
-                system=system_prompt,
                 messages=[
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
-                ]
+                ],
+                max_tokens=200,
+                temperature=0.7
             )
 
-            return message.content[0].text
+            return response.choices[0].message.content
 
         except Exception as e:
             logger.error(f"Error getting hint: {e}")
@@ -128,17 +128,17 @@ Provide an enhanced explanation that:
 3. Provide real-world context
 4. Keep it under 150 words and encouraging"""
 
-            message = self.client.messages.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
-                max_tokens=300,
-                temperature=0.7,
-                system=system_prompt,
                 messages=[
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
-                ]
+                ],
+                max_tokens=300,
+                temperature=0.7
             )
 
-            return message.content[0].text
+            return response.choices[0].message.content
 
         except Exception as e:
             logger.error(f"Error explaining answer: {e}")
@@ -146,14 +146,14 @@ Provide an enhanced explanation that:
 
     def chat(self, user_message: str, conversation_history: List[Dict] = None) -> Optional[str]:
         """
-        General chat with Claude for user assistance
+        General chat with AI for user assistance
 
         Args:
             user_message: User's message
             conversation_history: Previous messages in format [{"role": "user"/"assistant", "content": "..."}]
 
         Returns:
-            Claude's response or None
+            AI's response or None
         """
         if not self.is_available():
             return None
@@ -168,18 +168,21 @@ Provide an enhanced explanation that:
             Be encouraging, educational, and security-focused. Keep responses concise and practical."""
 
             # Build message history
-            messages = conversation_history or []
+            messages = [{"role": "system", "content": system_prompt}]
+
+            if conversation_history:
+                messages.extend(conversation_history)
+
             messages.append({"role": "user", "content": user_message})
 
-            message = self.client.messages.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
+                messages=messages,
                 max_tokens=500,
-                temperature=0.7,
-                system=system_prompt,
-                messages=messages
+                temperature=0.7
             )
 
-            return message.content[0].text
+            return response.choices[0].message.content
 
         except Exception as e:
             logger.error(f"Error in chat: {e}")
@@ -214,17 +217,17 @@ Return ONLY a JSON object in this exact format (no markdown, no extra text):
 
 The "correct" field should be the index (0-3) of the correct option."""
 
-            message = self.client.messages.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
-                max_tokens=400,
-                temperature=0.8,
-                system=system_prompt,
                 messages=[
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
-                ]
+                ],
+                max_tokens=400,
+                temperature=0.8
             )
 
-            response_text = message.content[0].text.strip()
+            response_text = response.choices[0].message.content.strip()
 
             # Try to extract JSON from response
             if response_text.startswith('```'):
@@ -265,17 +268,17 @@ The "correct" field should be the index (0-3) of the correct option."""
 Provide brief, encouraging feedback and 2-3 specific recommendations for
 what they should focus on next. Keep it under 100 words."""
 
-            message = self.client.messages.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
-                max_tokens=200,
-                temperature=0.7,
-                system=system_prompt,
                 messages=[
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
-                ]
+                ],
+                max_tokens=200,
+                temperature=0.7
             )
 
-            return message.content[0].text
+            return response.choices[0].message.content
 
         except Exception as e:
             logger.error(f"Error analyzing progress: {e}")
@@ -283,66 +286,69 @@ what they should focus on next. Keep it under 100 words."""
 
 
 # Singleton instance
-_claude_assistant = None
+_ai_assistant = None
 
 
-def get_claude_assistant() -> ClaudeAssistant:
-    """Get or create the Claude assistant instance"""
-    global _claude_assistant
-    if _claude_assistant is None:
-        _claude_assistant = ClaudeAssistant()
-    return _claude_assistant
+def get_ai_assistant() -> AIAssistant:
+    """Get or create the AI assistant instance"""
+    global _ai_assistant
+    if _ai_assistant is None:
+        _ai_assistant = AIAssistant()
+    return _ai_assistant
 
 
 # Convenience functions
 def get_hint(question: str, context: str = "") -> Optional[str]:
     """Get a hint for a question"""
-    return get_claude_assistant().get_hint(question, context)
+    return get_ai_assistant().get_hint(question, context)
 
 
 def explain_answer(question: str, correct_answer: str,
                    user_answer: str, explanation: str = "") -> Optional[str]:
     """Get enhanced explanation"""
-    return get_claude_assistant().explain_answer(
+    return get_ai_assistant().explain_answer(
         question, correct_answer, user_answer, explanation
     )
 
 
-def chat_with_claude(message: str, history: List[Dict] = None) -> Optional[str]:
-    """Chat with Claude"""
-    return get_claude_assistant().chat(message, history)
+def chat_with_ai(message: str, history: List[Dict] = None) -> Optional[str]:
+    """Chat with AI"""
+    return get_ai_assistant().chat(message, history)
 
 
 def generate_practice_question(topic: str, difficulty: str = "intermediate") -> Optional[Dict]:
     """Generate a practice question"""
-    return get_claude_assistant().generate_practice_question(topic, difficulty)
+    return get_ai_assistant().generate_practice_question(topic, difficulty)
 
 
 def analyze_progress(user_data: Dict) -> Optional[str]:
     """Analyze user progress"""
-    return get_claude_assistant().analyze_user_progress(user_data)
+    return get_ai_assistant().analyze_user_progress(user_data)
 
 
 if __name__ == '__main__':
     # Test the integration
-    print("Testing Claude Integration...")
-    assistant = ClaudeAssistant()
+    print("Testing DeepSeek AI Integration...")
+    assistant = AIAssistant()
 
     if assistant.is_available():
-        print("✅ Claude is available")
+        print("✅ DeepSeek AI is available")
 
         # Test hint generation
+        print("\nTesting hint generation...")
         hint = assistant.get_hint(
             "What should you do if you receive a suspicious email?",
             "This is about phishing detection"
         )
-        print(f"\n📝 Hint: {hint}")
+        print(f"📝 Hint: {hint}")
 
-        # Test question generation
-        question = assistant.generate_practice_question("passwords", "beginner")
-        print(f"\n❓ Generated Question: {json.dumps(question, indent=2)}")
+        # Test chat
+        print("\nTesting chat...")
+        response = assistant.chat("What is phishing?")
+        print(f"💬 Response: {response}")
 
     else:
-        print("❌ Claude is not available. Install anthropic package and set API key:")
-        print("   pip install anthropic")
-        print("   export ANTHROPIC_API_KEY='your-key-here'")
+        print("❌ DeepSeek AI is not available. Install openai package:")
+        print("   pip install openai")
+        print("\nOptional: Set DEEPSEEK_API_KEY environment variable")
+        print("   (DeepSeek works without key but has rate limits)")
