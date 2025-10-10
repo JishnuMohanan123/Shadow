@@ -198,7 +198,7 @@ def register_ai_routes(app):
                              user=user,
                              ai_available=assistant.is_available())
 
-    logger.info("✅ DeepSeek AI routes registered successfully")
+    logger.info("Ollama AI routes registered successfully")
 
 
 # For standalone testing

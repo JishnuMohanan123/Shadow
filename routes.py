@@ -21,16 +21,16 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=SESSION_TIMEOUT_MINUTES)
 
-# Register DeepSeek AI routes
+# Register Ollama AI routes
 try:
     from ai_routes import register_ai_routes
     register_ai_routes(app)
-    print("✅ DeepSeek AI integration enabled")
+    print("Ollama AI integration enabled")
 except ImportError as e:
-    print(f"⚠️  DeepSeek AI not available: {e}")
+    print(f"AI not available: {e}")
     print("   To enable: pip install openai")
 except Exception as e:
-    print(f"⚠️  Could not register AI routes: {e}")
+    print(f"Could not register AI routes: {e}")
 
 
 @app.route('/')
