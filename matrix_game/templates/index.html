@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHADOW - Matrix Cyber Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/matrix.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Main Terminal Container -->
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <span class="terminal-title">[SHADOW SYSTEM v1.0]</span>
+            <span class="terminal-status">ONLINE</span>
+        </div>
+
+        <div class="terminal-body">
+            <!-- System Boot Log -->
+            <div class="boot-sequence" id="bootLog">
+                <p class="log-line">> INITIALIZING SHADOW PROTOCOL...</p>
+                <p class="log-line delay-1">> LOADING CYBER DEFENSE MATRIX...</p>
+                <p class="log-line delay-2">> CONNECTING TO SECURE NODE...</p>
+                <p class="log-line delay-3 success">> CONNECTION ESTABLISHED</p>
+                <p class="log-line delay-4">> BIOMETRIC SCAN: <span class="success">VERIFIED</span></p>
+                <p class="log-line delay-5">> ACCESS LEVEL: <span class="warning">AGENT</span></p>
+                <p class="log-line delay-6"><br></p>
+            </div>
+
+            <!-- Welcome Message with Typing Effect -->
+            <div class="welcome-message" id="welcomeMessage">
+                <h1 class="glitch typing-text" data-text="WELCOME TO THE MATRIX">WELCOME TO THE MATRIX</h1>
+                <p class="subtitle typing-text-slow">Cyber Awareness Training System</p>
+
+                <div class="mission-brief">
+                    <p class="typing-text-slow delay-7">
+                        <span class="accent">[MISSION BRIEFING]</span><br>
+                        Agent, the digital world is under constant threat.<br>
+                        Your knowledge is your weapon.<br>
+                        Complete this training to become a Cyber Guardian.
+                    </p>
+                </div>
+
+                <!-- Player Name Input -->
+                <form method="POST" action="{{ url_for('start_game') }}" id="startForm">
+                    <div class="input-group delay-8">
+                        <label for="player_name" class="input-label">> ENTER CODENAME:</label>
+                        <input type="text"
+                               id="player_name"
+                               name="player_name"
+                               class="matrix-input"
+                               placeholder="Agent_001"
+                               maxlength="20"
+                               required>
+                    </div>
+
+                    <div class="button-container delay-9">
+                        <button type="submit" class="matrix-button pulse">
+                            <span class="button-text">JACK IN</span>
+                            <span class="button-subtitle">[ INITIATE TRAINING ]</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- System Stats -->
+                <div class="system-stats delay-10">
+                    <div class="stat-item">
+                        <span class="stat-label">DIFFICULTY:</span>
+                        <span class="stat-value warning">ADAPTIVE</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">QUESTIONS:</span>
+                        <span class="stat-value">10</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">MODE:</span>
+                        <span class="stat-value success">TRAINING</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terminal Footer -->
+        <div class="terminal-footer">
+            <span class="footer-text">[SYSTEM] Ready to jack in | Press ENTER to begin</span>
+            <span class="cursor-blink">█</span>
+        </div>
+    </div>
+
+    <!-- Audio Elements (optional) -->
+    <audio id="keySound" preload="auto">
+        <source src="{{ url_for('static', filename='sounds/key.mp3') }}" type="audio/mpeg">
+    </audio>
+    <audio id="glitchSound" preload="auto">
+        <source src="{{ url_for('static', filename='sounds/glitch.mp3') }}" type="audio/mpeg">
+    </audio>
+
+    <!-- Matrix Animation Script -->
+    <script src="{{ url_for('static', filename='js/matrix-rain.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/terminal-effects.js') }}"></script>
+
+    <script>
+        // Auto-submit form on Enter key
+        document.getElementById('player_name').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('startForm').submit();
+            }
+        });
+
+        // Focus input on load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('player_name').focus();
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
