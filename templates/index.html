@@ -1,0 +1,809 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - Cyber Command Portal{% endblock %}
+
+{% block content %}
+<div class="login-page">
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Animated particles background -->
+    <div class="particles-bg"></div>
+
+    <!-- Scanline effect -->
+    <div class="scanline"></div>
+
+    <div class="login-wrapper">
+        <!-- Left Panel - Branding -->
+        <div class="brand-panel">
+            <div class="brand-content">
+                <div class="brand-icon">
+                    <div class="icon-glow"></div>
+                    <span class="icon-text">⚡</span>
+                </div>
+
+                <h1 class="brand-title">SHADOW 1834</h1>
+                <p class="brand-tagline">CYBER WARFARE DIVISION</p>
+
+                <div class="brand-divider"></div>
+
+                <!-- System Stats -->
+                <div class="system-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">SECURITY LEVEL</span>
+                        <span class="stat-value">MAXIMUM</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">FIREWALL STATUS</span>
+                        <span class="stat-value stat-active">ACTIVE</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">ENCRYPTION</span>
+                        <span class="stat-value">AES-256</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">THREAT LEVEL</span>
+                        <span class="stat-value stat-success">SECURE</span>
+                    </div>
+                </div>
+
+                <!-- Terminal Output -->
+                <div class="terminal-output">
+                    <div class="terminal-line">
+                        <span class="prompt">$</span>
+                        <span class="command">system.status()</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">→ All systems operational</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">→ Awaiting authentication...</span>
+                    </div>
+                    <div class="terminal-cursor">_</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Login Form -->
+        <div class="login-panel">
+            <div class="login-content">
+                <div class="login-header">
+                    <h2 class="login-title">ACCESS CONTROL</h2>
+                    <p class="login-subtitle">Authorized Personnel Only</p>
+                </div>
+
+                <!-- Login Form -->
+                <form method="POST" action="{{ url_for('login') }}" class="login-form">
+                    <div class="form-group">
+                        <label for="username" class="form-label">
+                            <span class="label-icon">👤</span>
+                            <span class="label-text">AGENT CODENAME</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                class="form-input"
+                                placeholder="Enter your codename"
+                                autocomplete="username"
+                                required
+                            >
+                            <div class="input-border"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">
+                            <span class="label-icon">🔐</span>
+                            <span class="label-text">ACCESS CODE</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-input"
+                                placeholder="Enter your access code"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <div class="input-border"></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login">
+                        <span class="btn-text">AUTHENTICATE</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span class="divider-text">NEW RECRUIT?</span>
+                </div>
+
+                <!-- Register Link -->
+                <a href="{{ url_for('register') }}" class="btn-register">
+                    <span class="btn-text">REQUEST CLEARANCE</span>
+                    <span class="btn-icon">✚</span>
+                </a>
+
+                <!-- Security Badge -->
+                <div class="security-badge">
+                    <div class="badge-icon">🛡️</div>
+                    <div class="badge-text">
+                        <div class="badge-title">SECURE CONNECTION</div>
+                        <div class="badge-desc">256-bit Encrypted • Monitored Access</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Reset login page styles */
+.login-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #0a0e1a;
+    overflow: hidden;
+}
+
+/* Matrix Canvas */
+#matrix-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.15;
+}
+
+/* Animated particles background */
+.particles-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(0, 255, 255, 0.3), transparent),
+        radial-gradient(2px 2px at 60px 70px, rgba(0, 136, 255, 0.3), transparent),
+        radial-gradient(1px 1px at 50px 50px, rgba(0, 255, 136, 0.3), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(0, 255, 255, 0.3), transparent);
+    background-size: 200px 200px;
+    background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+    animation: particles-drift 20s linear infinite;
+}
+
+@keyframes particles-drift {
+    0% { background-position: 0 0, 40px 60px, 130px 270px, 70px 100px; }
+    100% { background-position: 200px 200px, 240px 260px, 330px 470px, 270px 300px; }
+}
+
+/* Scanline effect */
+.scanline {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.8), transparent);
+    animation: scanline-move 4s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes scanline-move {
+    0% { top: 0%; opacity: 0; }
+    50% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+/* Main wrapper */
+.login-wrapper {
+    position: relative;
+    display: grid;
+    grid-template-columns: 45% 55%;
+    width: 100%;
+    height: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Brand Panel */
+.brand-panel {
+    background: linear-gradient(135deg, rgba(0, 20, 40, 0.95), rgba(0, 10, 30, 0.98));
+    border-right: 2px solid rgba(0, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.brand-panel::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+    animation: glow-rotate 10s linear infinite;
+}
+
+@keyframes glow-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.brand-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.brand-icon {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 2rem;
+}
+
+.icon-glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.4), transparent 70%);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.icon-text {
+    position: relative;
+    font-size: 6rem;
+    display: block;
+    filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.8));
+    animation: float-icon 3s ease-in-out infinite;
+}
+
+@keyframes float-icon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.brand-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #00ffff;
+    margin-bottom: 0.5rem;
+    letter-spacing: 8px;
+    text-shadow:
+        0 0 20px rgba(0, 255, 255, 0.8),
+        0 0 40px rgba(0, 255, 255, 0.4);
+}
+
+.brand-tagline {
+    font-family: 'Rajdhani', monospace;
+    font-size: 1.1rem;
+    color: #a0c4ff;
+    letter-spacing: 4px;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.brand-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.5), transparent);
+    margin: 2rem 0;
+}
+
+/* System Stats */
+.system-stats {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    font-family: 'Rajdhani', monospace;
+    font-size: 0.85rem;
+    color: #a0c4ff;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem;
+    color: #00ffff;
+    font-weight: 700;
+}
+
+.stat-active {
+    color: #00ff88;
+    animation: blink 2s ease-in-out infinite;
+}
+
+.stat-success {
+    color: #00ff88;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Terminal Output */
+.terminal-output {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+.terminal-line {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.prompt {
+    color: #00ff88;
+    margin-right: 0.5rem;
+}
+
+.command {
+    color: #00ffff;
+}
+
+.output {
+    color: #a0c4ff;
+}
+
+.terminal-cursor {
+    display: inline-block;
+    color: #00ffff;
+    animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Login Panel */
+.login-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    background: linear-gradient(135deg, rgba(10, 14, 26, 0.95), rgba(15, 20, 35, 0.98));
+}
+
+.login-content {
+    width: 100%;
+    max-width: 480px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.login-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #00ffff;
+    margin-bottom: 0.5rem;
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.login-subtitle {
+    font-family: 'Rajdhani', monospace;
+    font-size: 0.95rem;
+    color: #a0c4ff;
+    letter-spacing: 2px;
+}
+
+/* Form Styles */
+.login-form {
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.75rem;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem;
+    color: #00ffff;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.label-icon {
+    font-size: 1.1rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    font-family: 'Rajdhani', monospace;
+    font-size: 1rem;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.form-input::placeholder {
+    color: rgba(160, 196, 255, 0.5);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: rgba(0, 255, 255, 0.8);
+    background: rgba(0, 255, 255, 0.05);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.input-border {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00ffff, #00ff88);
+    transition: width 0.3s ease;
+}
+
+.form-input:focus + .input-border {
+    width: 100%;
+}
+
+/* Buttons */
+.btn-login {
+    width: 100%;
+    padding: 1.15rem 2rem;
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 136, 255, 0.2));
+    border: 2px solid #00ffff;
+    border-radius: 8px;
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #00ffff;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-login::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-login:hover::before {
+    left: 100%;
+}
+
+.btn-login:hover {
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 136, 255, 0.3));
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+/* Divider */
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+}
+
+.divider-text {
+    position: relative;
+    display: inline-block;
+    padding: 0 1rem;
+    background: rgba(15, 20, 35, 0.98);
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    color: #a0c4ff;
+    letter-spacing: 1px;
+}
+
+/* Register Button */
+.btn-register {
+    width: 100%;
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(160, 196, 255, 0.3);
+    border-radius: 8px;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #a0c4ff;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-decoration: none;
+    margin-bottom: 2rem;
+}
+
+.btn-register:hover {
+    border-color: rgba(0, 255, 255, 0.5);
+    color: #00ffff;
+    background: rgba(0, 255, 255, 0.05);
+}
+
+/* Security Badge */
+.security-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(0, 255, 136, 0.05);
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    border-radius: 6px;
+}
+
+.badge-icon {
+    font-size: 2rem;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+}
+
+.badge-text {
+    flex: 1;
+}
+
+.badge-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #00ff88;
+    margin-bottom: 0.25rem;
+}
+
+.badge-desc {
+    font-family: 'Rajdhani', monospace;
+    font-size: 0.75rem;
+    color: #a0c4ff;
+}
+
+/* Responsive Design for PC */
+@media (min-width: 1200px) and (min-height: 800px) {
+    .login-wrapper {
+        max-width: 1800px;
+    }
+
+    .brand-title {
+        font-size: 4rem;
+    }
+
+    .login-title {
+        font-size: 2.25rem;
+    }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) {
+    .login-wrapper {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+    }
+
+    .brand-panel {
+        border-right: none;
+        border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+        padding: 2rem;
+    }
+
+    .brand-title {
+        font-size: 2.5rem;
+    }
+
+    .login-panel {
+        padding: 2rem;
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .brand-panel {
+        padding: 1.5rem;
+    }
+
+    .brand-title {
+        font-size: 2rem;
+        letter-spacing: 4px;
+    }
+
+    .icon-text {
+        font-size: 4rem;
+    }
+
+    .system-stats {
+        padding: 1rem;
+    }
+
+    .login-panel {
+        padding: 1.5rem;
+    }
+
+    .login-title {
+        font-size: 1.5rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Matrix Rain Effect
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Matrix characters - mix of code symbols and binary
+    const matrix = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-={}[]|:;<>?,./~`';
+    const characters = matrix.split('');
+
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+
+    // Array to store y position of each drop
+    const drops = [];
+    for (let i = 0; i < columns; i++) {
+        drops[i] = Math.random() * -100; // Start with random positions
+    }
+
+    // Draw the matrix rain
+    function drawMatrix() {
+        // Semi-transparent black to create fade effect
+        ctx.fillStyle = 'rgba(10, 14, 26, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Set text style
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < drops.length; i++) {
+            // Random character
+            const char = characters[Math.floor(Math.random() * characters.length)];
+
+            // Gradient from cyan to green
+            const gradient = ctx.createLinearGradient(0, drops[i] * fontSize, 0, (drops[i] + 1) * fontSize);
+            gradient.addColorStop(0, '#00ffff');
+            gradient.addColorStop(1, '#00ff88');
+            ctx.fillStyle = gradient;
+
+            // Draw the character
+            ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+            // Reset drop to top randomly
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+
+            // Increment y coordinate
+            drops[i]++;
+        }
+    }
+
+    // Run the animation
+    const matrixInterval = setInterval(drawMatrix, 50);
+
+    // Resize canvas on window resize
+    window.addEventListener('resize', function() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    // Input focus effects
+    const inputs = document.querySelectorAll('.form-input');
+
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+
+        input.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+    });
+
+    // Form submission
+    const form = document.querySelector('.login-form');
+    const loginBtn = document.querySelector('.btn-login');
+
+    form.addEventListener('submit', function(e) {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (!username || !password) {
+            e.preventDefault();
+            showCyberNotification('Please enter both codename and access code', 'error');
+            return;
+        }
+
+        // Show loading state
+        loginBtn.querySelector('.btn-text').textContent = 'AUTHENTICATING';
+        loginBtn.querySelector('.btn-icon').textContent = '⏳';
+        loginBtn.disabled = true;
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'Enter') {
+            form.submit();
+        }
+    });
+
+    // System ready notification
+    setTimeout(() => {
+        showCyberNotification('SYSTEM READY - AWAITING AUTHENTICATION', 'success');
+    }, 1000);
+});
+</script>
+{% endblock %}

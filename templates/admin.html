@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - Shadow1834{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="admin-header">
+        <h1>🔧 Admin Control Panel</h1>
+        <p>User Management & System Administration</p>
+    </div>
+
+    <div class="admin-stats">
+        <div class="stat-card">
+            <h3>{{ users|length }}</h3>
+            <p>Total Users</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ users|selectattr('9', 'equalto', 1)|list|length }}</h3>
+            <p>Administrators</p>
+        </div>
+    </div>
+
+    <div class="users-table-container">
+        <h2>User Management</h2>
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Score</th>
+                    <th>Level</th>
+                    <th>Badges</th>
+                    <th>Joined</th>
+                    <th>Last Login</th>
+                    <th>Admin</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user[0] }}</td>
+                    <td><strong>{{ user[1] }}</strong></td>
+                    <td>{{ user[2] or 'N/A' }}</td>
+                    <td>{{ user[3] }}</td>
+                    <td>{{ user[4] }}</td>
+                    <td>{{ safe_json_loads(user[8], [])|length }}</td>
+                    <td>{{ user[5][:10] if user[5] else 'N/A' }}</td>
+                    <td>{{ user[6][:10] if user[6] else 'Never' }}</td>
+                    <td>
+                        {% if user[9] == 1 %}
+                        <span class="badge admin-badge">✓</span>
+                        {% else %}
+                        <span class="badge user-badge">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button class="btn btn-small btn-edit" onclick="editUser({{ user[0] }}, '{{ user[1] }}', '{{ user[2] }}', {{ user[3] }}, {{ user[4] }}, {{ user[9] }})">Edit</button>
+                        <form method="POST" action="{{ url_for('admin_delete_user', user_id=user[0]) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete user {{ user[1] }}?');">
+                            <button type="submit" class="btn btn-small btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Edit User</h2>
+        <form id="editForm" method="POST" action="">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" name="username" id="edit_username" required>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" id="edit_email">
+            </div>
+            <div class="form-group">
+                <label>Total Score:</label>
+                <input type="number" name="total_score" id="edit_score" min="0">
+            </div>
+            <div class="form-group">
+                <label>Level:</label>
+                <input type="number" name="current_level" id="edit_level" min="1" max="10">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="is_admin" id="edit_admin">
+                    Admin Privileges
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.admin-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-card h3 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.stat-card p {
+    margin: 0.5rem 0 0 0;
+    color: var(--text-secondary);
+}
+
+.users-table-container {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.users-table th,
+.users-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.users-table th {
+    background: var(--bg-color);
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.users-table tr:hover {
+    background: var(--bg-color);
+}
+
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.admin-badge {
+    background: var(--success-color);
+    color: white;
+}
+
+.user-badge {
+    background: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.btn-small {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    margin-right: 0.25rem;
+}
+
+.btn-edit {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--error-color);
+    color: white;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 5% auto;
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+}
+
+.close {
+    color: var(--text-secondary);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+.form-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.btn-secondary {
+    background: var(--border-color);
+    color: var(--text-color);
+}
+</style>
+
+<script>
+function editUser(id, username, email, score, level, isAdmin) {
+    document.getElementById('edit_username').value = username;
+    document.getElementById('edit_email').value = email || '';
+    document.getElementById('edit_score').value = score;
+    document.getElementById('edit_level').value = level;
+    document.getElementById('edit_admin').checked = isAdmin == 1;
+
+    document.getElementById('editForm').action = '/admin/user/' + id + '/edit';
+    document.getElementById('editModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('editModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

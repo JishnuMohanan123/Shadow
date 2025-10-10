@@ -1,0 +1,505 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - Elite Agent Rankings{% endblock %}
+
+{% block content %}
+<style>
+    /* Leaderboard Specific Styles */
+    .hero-card-leaderboard {
+        text-align: center;
+        background: linear-gradient(135deg, rgba(255, 170, 0, 0.2), rgba(255, 215, 0, 0.1));
+        border: 2px solid #ffaa00;
+    }
+
+    .float-animation {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .hero-title {
+        color: #ffaa00;
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        font-family: 'Orbitron', monospace;
+        text-shadow: 0 0 20px #ffaa00;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        font-family: 'Orbitron', monospace;
+        font-size: 0.9rem;
+    }
+
+    .ranking-item {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        background: var(--panel-bg);
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .ranking-item:hover {
+        transform: translateY(-3px);
+    }
+
+    .rank-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        margin-right: 2rem;
+        font-weight: 900;
+        font-size: 1.4rem;
+        font-family: 'Orbitron', monospace;
+        position: relative;
+    }
+
+    .rank-gold {
+        background: linear-gradient(135deg, #ffaa00, #ffd700);
+        color: #000;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        border: 2px solid #ffd700;
+    }
+
+    .rank-silver {
+        background: linear-gradient(135deg, #c0c0c0, #e5e5e5);
+        color: #000;
+        box-shadow: 0 0 20px rgba(192, 192, 192, 0.5);
+        border: 2px solid #c0c0c0;
+    }
+
+    .rank-bronze {
+        background: linear-gradient(135deg, #cd7f32, #d2691e);
+        color: #fff;
+        box-shadow: 0 0 20px rgba(205, 127, 50, 0.5);
+        border: 2px solid #cd7f32;
+    }
+
+    .rank-default {
+        background: rgba(0, 255, 255, 0.1);
+        color: #00ffff;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        border: 2px solid #00ffff;
+    }
+
+    .current-user-glow {
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+
+    .pulse-indicator {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        animation: pulse-glow 2s ease-in-out infinite alternate;
+    }
+
+    .scan-line-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.1;
+        animation: scan-line 3s linear infinite;
+        pointer-events: none;
+    }
+
+    @keyframes pulse-glow {
+        from { opacity: 1; transform: scale(1); }
+        to { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    @keyframes scan-line {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(100%); }
+    }
+
+    @keyframes glitch {
+        0%, 100% { transform: translate(0); }
+        33% { transform: translate(-2px, 2px); }
+        66% { transform: translate(2px, -2px); }
+    }
+
+    .badge-elite, .badge-you {
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-family: 'Orbitron', monospace;
+    }
+
+    .badge-elite {
+        background: rgba(255, 215, 0, 0.2);
+        color: #ffd700;
+        border: 1px solid rgba(255, 215, 0, 0.5);
+    }
+
+    .badge-you {
+        background: rgba(0, 255, 255, 0.2);
+        color: #00ffff;
+        border: 1px solid rgba(0, 255, 255, 0.5);
+    }
+</style>
+
+<div class="card hero-card-leaderboard" role="banner" aria-label="Leaderboard Header">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+        <div class="float-animation" style="font-size: 4rem;" role="img" aria-label="Trophy">🏆</div>
+        <div>
+            <h1 class="hero-title">
+                ELITE RANKINGS
+            </h1>
+            <p style="font-size: 1.25rem; opacity: 0.9; color: #a0c4ff; font-family: 'Rajdhani', monospace; letter-spacing: 2px;">
+                [GLOBAL CYBER WARFARE LEADERBOARD]
+            </p>
+        </div>
+    </div>
+
+    <!-- Live Stats -->
+    <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px; margin-top: 1rem; border: 1px solid rgba(255, 170, 0, 0.3);" role="region" aria-label="Live Statistics">
+        <div class="stats-grid">
+            <div>
+                <div style="color: #00ff88;">ACTIVE AGENTS</div>
+                <div style="color: #ffaa00; font-weight: bold;" aria-live="polite">{{ leaders|length }}</div>
+            </div>
+            <div>
+                <div style="color: #00ff88;">TOP SCORE</div>
+                <div style="color: #ffaa00; font-weight: bold;" aria-live="polite">{{ leaders[0][1] if leaders else '0' }}</div>
+            </div>
+            <div>
+                <div style="color: #00ff88;">COMPETITION</div>
+                <div style="color: #ffaa00; font-weight: bold;">LIVE</div>
+            </div>
+            <div>
+                <div style="color: #00ff88;">LAST UPDATE</div>
+                <div style="color: #ffaa00; font-weight: bold;" id="lastUpdate" aria-live="polite">NOW</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="padding: 2rem;">
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+        <h2 style="color: #00ffff; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+            Global Agent Rankings
+        </h2>
+        <div style="height: 2px; flex: 1; background: linear-gradient(90deg, #00ffff, transparent);" aria-hidden="true"></div>
+        <div style="background: rgba(0, 255, 255, 0.1); padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid rgba(0, 255, 255, 0.3);">
+            <span style="color: #00ffff; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                REAL-TIME DATA
+            </span>
+        </div>
+    </div>
+
+    <div id="rankings-container" role="list" aria-label="Agent Rankings">
+        {% for i, leader in enumerate(leaders) %}
+        {% set rank = i + 1 %}
+        {% set username, total_score, completed_modules_str, badges_str, avatar_emoji, current_level = leader %}
+        {% set completed_modules = safe_json_loads(completed_modules_str, []) %}
+        {% set badges = safe_json_loads(badges_str, []) %}
+        {% set is_current_user = username == user[1] %}
+
+        <!-- Determine rank styling -->
+        {% if rank == 1 %}
+        {% set rank_class = "rank-gold" %}
+        {% set rank_icon = "🥇" %}
+        {% set rank_text = "Gold Medal" %}
+        {% elif rank == 2 %}
+        {% set rank_class = "rank-silver" %}
+        {% set rank_icon = "🥈" %}
+        {% set rank_text = "Silver Medal" %}
+        {% elif rank == 3 %}
+        {% set rank_class = "rank-bronze" %}
+        {% set rank_icon = "🥉" %}
+        {% set rank_text = "Bronze Medal" %}
+        {% else %}
+        {% set rank_class = "rank-default" %}
+        {% set rank_icon = rank %}
+        {% set rank_text = "Rank " ~ rank %}
+        {% endif %}
+
+        <div class="ranking-item {% if is_current_user %}current-user-glow{% endif %}"
+             data-rank="{{ rank }}"
+             role="listitem"
+             aria-label="Rank {{ rank }}: {{ username }}, Score {{ total_score }}"
+             tabindex="0">
+
+            <!-- Rank Badge -->
+            <div class="rank-badge {{ rank_class }}" role="img" aria-label="{{ rank_text }}">
+                {{ rank_icon }}
+                {% if rank <= 3 %}
+                <div class="pulse-indicator" style="background: {% if rank == 1 %}#ffd700{% elif rank == 2 %}#c0c0c0{% else %}#cd7f32{% endif %};" aria-hidden="true"></div>
+                {% endif %}
+            </div>
+
+            <!-- Agent Info -->
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex: 1;">
+                <span style="font-size: 2.5rem;" role="img" aria-label="Avatar">{{ avatar_emoji }}</span>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <h3 style="margin: 0; color: #00ffff; font-size: 1.4rem; font-family: 'Orbitron', monospace; text-transform: uppercase; letter-spacing: 1px;">
+                            {{ username }}
+                        </h3>
+                        {% if is_current_user %}
+                        <span class="badge-you" aria-label="This is you">
+                            YOU
+                        </span>
+                        {% endif %}
+                        {% if rank <= 3 %}
+                        <span class="badge-elite" aria-label="Elite agent">
+                            ELITE
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 2rem; font-size: 0.9rem; color: #a0c4ff; font-family: 'Rajdhani', monospace;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span role="img" aria-label="Shield">🛡️</span>
+                            <span>Level {{ current_level }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span role="img" aria-label="Sword">⚔️</span>
+                            <span>{{ completed_modules|length }} Missions</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span role="img" aria-label="Badge">🏅</span>
+                            <span>{{ badges|length }} Badges</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Display -->
+            <div style="text-align: right; margin-left: 2rem;">
+                <div style="font-size: 2rem; font-weight: 900; font-family: 'Orbitron', monospace; margin-bottom: 0.25rem;"
+                     class="score-{{ rank_class }}">
+                    {{ "{:,}".format(total_score) }}
+                </div>
+                <div style="font-size: 0.9rem; color: #a0c4ff; font-family: 'Orbitron', monospace; text-transform: uppercase;">
+                    Cyber Points
+                </div>
+            </div>
+
+            <!-- Animated Background for Top 3 -->
+            {% if rank <= 3 %}
+            <div class="scan-line-bg" style="background: linear-gradient(45deg, transparent 30%, rgba(255, 215, 0, 0.3) 50%, transparent 70%);" aria-hidden="true"></div>
+            {% endif %}
+
+            {% if is_current_user %}
+            <div class="scan-line-bg" style="background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);" aria-hidden="true"></div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if leaders|length < 10 %}
+    <div style="text-align: center; margin-top: 3rem; padding: 2rem; border: 2px dashed rgba(0, 255, 255, 0.3); border-radius: 8px; background: rgba(0, 255, 255, 0.05);" role="status" aria-live="polite">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.7;" role="img" aria-label="Scanning">📡</div>
+        <h3 style="color: #00ffff; font-family: 'Orbitron', monospace; margin-bottom: 1rem; text-transform: uppercase;">
+            Scanning for More Agents
+        </h3>
+        <p style="color: #a0c4ff; font-family: 'Rajdhani', monospace; margin-bottom: 0;">
+            Complete more missions to unlock additional ranking data
+        </p>
+        <div style="margin-top: 1rem;">
+            <div style="display: inline-block; background: rgba(0, 255, 255, 0.1); padding: 0.5rem 1rem; border-radius: 6px; font-family: 'Orbitron', monospace; font-size: 0.8rem; color: #00ffff;">
+                QUANTUM ENCRYPTION ACTIVE
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Performance Analytics -->
+<div class="card" style="margin-top: 2rem; border-left: 4px solid #0088ff;">
+    <h3 style="color: #0088ff; font-family: 'Orbitron', monospace; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 1px;">
+        Performance Analytics
+    </h3>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+        <div style="background: rgba(0, 136, 255, 0.1); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(0, 136, 255, 0.3);" role="region" aria-label="Score Distribution">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;" role="img" aria-label="Chart">📊</span>
+                <h4 style="color: #0088ff; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase;">
+                    Score Distribution
+                </h4>
+            </div>
+            <div style="font-family: 'Rajdhani', monospace; color: #a0c4ff;">
+                {% if leaders and leaders|length > 0 %}
+                    {% set total_score = leaders|sum(attribute=1) %}
+                    {% set avg_score = (total_score / leaders|length)|int %}
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Highest:</span>
+                        <span style="color: #00ff88; font-weight: bold;">{{ "{:,}".format(leaders[0][1]) }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Average:</span>
+                        <span style="color: #ffaa00; font-weight: bold;">{{ "{:,}".format(avg_score) }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Your Rank:</span>
+                        <span style="color: #00ffff; font-weight: bold;">
+                            {% set user_rank = "N/A" %}
+                            {% for i, leader in enumerate(leaders) %}
+                                {% if leader[0] == user[1] %}
+                                    {% set user_rank = "#" ~ (i + 1)|string %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ user_rank }}
+                        </span>
+                    </div>
+                {% else %}
+                    <div style="text-align: center; padding: 1rem; color: #a0c4ff;">
+                        No ranking data available yet
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="background: rgba(0, 255, 136, 0.1); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(0, 255, 136, 0.3);" role="region" aria-label="Mission Completion">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;" role="img" aria-label="Target">🎯</span>
+                <h4 style="color: #00ff88; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase;">
+                    Mission Completion
+                </h4>
+            </div>
+            <div style="font-family: 'Rajdhani', monospace; color: #a0c4ff;">
+                {% if leaders %}
+                    {% set total_completed = namespace(count=0) %}
+                    {% for leader in leaders %}
+                        {% set completed = safe_json_loads(leader[2], []) %}
+                        {% set total_completed.count = total_completed.count + completed|length %}
+                    {% endfor %}
+                    {% set total_possible = leaders|length * 5 %}
+                    {% set completion_rate = ((total_completed.count / total_possible) * 100)|int if total_possible > 0 else 0 %}
+
+                    {% set elite_count = namespace(count=0) %}
+                    {% for leader in leaders %}
+                        {% set completed = safe_json_loads(leader[2], []) %}
+                        {% if completed|length == 5 %}
+                            {% set elite_count.count = elite_count.count + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% set completion_rate = 0 %}
+                    {% set elite_count = namespace(count=0) %}
+                {% endif %}
+
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Global Rate:</span>
+                    <span style="color: #00ff88; font-weight: bold;">{{ completion_rate }}%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Active Agents:</span>
+                    <span style="color: #ffaa00; font-weight: bold;">{{ leaders|length }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Elite Status:</span>
+                    <span style="color: #00ffff; font-weight: bold;">{{ elite_count.count }} Agents</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        'use strict';
+
+        let updateInterval, scanInterval;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update timestamp
+            function updateTimestamp() {
+                const now = new Date();
+                const element = document.getElementById('lastUpdate');
+                if (element) {
+                    element.textContent = now.toLocaleTimeString();
+                }
+            }
+
+            // Update every 30 seconds
+            updateInterval = setInterval(updateTimestamp, 30000);
+
+            // Add hover effects via CSS classes
+            const rankingItems = document.querySelectorAll('.ranking-item');
+            rankingItems.forEach((item, index) => {
+                // Keyboard support
+                item.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        this.click();
+                    }
+                });
+
+                item.addEventListener('mouseenter', function() {
+                    const username = this.querySelector('h3');
+                    if (username) {
+                        username.style.animation = 'glitch 0.3s ease-in-out';
+                        setTimeout(() => {
+                            username.style.animation = '';
+                        }, 300);
+                    }
+                });
+
+                // Stagger animation entrance
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Add scanning effect
+            function addScanEffect() {
+                const container = document.getElementById('rankings-container');
+                if (!container) return;
+
+                const scanLine = document.createElement('div');
+                scanLine.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 2px;
+                    background: linear-gradient(90deg, transparent, #00ffff, transparent);
+                    animation: scan-line 2s linear;
+                    z-index: 10;
+                    pointer-events: none;
+                `;
+                scanLine.setAttribute('aria-hidden', 'true');
+
+                container.style.position = 'relative';
+                container.appendChild(scanLine);
+
+                setTimeout(() => {
+                    if (container.contains(scanLine)) {
+                        container.removeChild(scanLine);
+                    }
+                }, 2000);
+            }
+
+            // Trigger scan effect periodically
+            scanInterval = setInterval(addScanEffect, 10000);
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (updateInterval) clearInterval(updateInterval);
+            if (scanInterval) clearInterval(scanInterval);
+        });
+    })();
+</script>
+{% endblock %}

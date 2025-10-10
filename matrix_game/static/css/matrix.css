@@ -1,0 +1,1082 @@
+/**
+ * SHADOW - Matrix-Themed Cyber Quiz
+ * Main Stylesheet with Neon Effects
+ */
+
+/* ========================================
+   GLOBAL STYLES & VARIABLES
+   ======================================== */
+
+:root {
+    --matrix-green: #00FF00;
+    --matrix-dark-green: #003B00;
+    --neon-green: #39FF14;
+    --cyber-blue: #00FFFF;
+    --warning-yellow: #FFD700;
+    --error-red: #FF0000;
+    --bg-black: #000000;
+    --terminal-bg: rgba(0, 20, 0, 0.85);
+    --border-glow: 0 0 10px var(--matrix-green),
+                   0 0 20px var(--matrix-green),
+                   0 0 30px var(--matrix-green);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    background: var(--bg-black);
+    color: var(--matrix-green);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ========================================
+   MATRIX RAIN BACKGROUND
+   ======================================== */
+
+#matrix-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+/* ========================================
+   TERMINAL CONTAINER
+   ======================================== */
+
+.terminal-container {
+    max-width: 900px;
+    margin: 50px auto;
+    background: var(--terminal-bg);
+    border: 2px solid var(--matrix-green);
+    border-radius: 8px;
+    box-shadow: var(--border-glow);
+    padding: 20px;
+    animation: fadeIn 1s ease-in;
+}
+
+.terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--matrix-green);
+    margin-bottom: 20px;
+}
+
+.terminal-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-shadow: 0 0 10px var(--neon-green);
+}
+
+.terminal-status {
+    color: var(--neon-green);
+    font-size: 0.9rem;
+    animation: pulse 2s infinite;
+}
+
+.terminal-body {
+    min-height: 400px;
+    padding: 20px;
+}
+
+.terminal-footer {
+    padding-top: 15px;
+    border-top: 1px solid var(--matrix-green);
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-text {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+/* ========================================
+   BOOT SEQUENCE & LOGS
+   ======================================== */
+
+.boot-sequence {
+    margin-bottom: 30px;
+}
+
+.log-line {
+    font-size: 0.9rem;
+    margin: 5px 0;
+    opacity: 0;
+    animation: fadeInText 0.5s ease-in forwards;
+}
+
+.log-line.delay-1 { animation-delay: 0.5s; }
+.log-line.delay-2 { animation-delay: 1s; }
+.log-line.delay-3 { animation-delay: 1.5s; }
+.log-line.delay-4 { animation-delay: 2s; }
+.log-line.delay-5 { animation-delay: 2.5s; }
+.log-line.delay-6 { animation-delay: 3s; }
+.log-line.delay-7 { animation-delay: 3.5s; }
+.log-line.delay-8 { animation-delay: 4s; }
+.log-line.delay-9 { animation-delay: 4.5s; }
+.log-line.delay-10 { animation-delay: 5s; }
+.log-line.delay-11 { animation-delay: 5.5s; }
+
+.log-line.success {
+    color: var(--neon-green);
+    text-shadow: 0 0 5px var(--neon-green);
+}
+
+.log-line.warning {
+    color: var(--warning-yellow);
+}
+
+.log-line.error {
+    color: var(--error-red);
+}
+
+/* ========================================
+   WELCOME MESSAGE
+   ======================================== */
+
+.welcome-message {
+    text-align: center;
+}
+
+.glitch {
+    font-family: 'Orbitron', monospace;
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--matrix-green);
+    text-shadow: 0 0 20px var(--neon-green);
+    margin: 30px 0;
+    position: relative;
+    animation: glitchEffect 3s infinite;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--cyber-blue);
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px var(--cyber-blue);
+}
+
+.mission-brief {
+    background: rgba(0, 255, 0, 0.05);
+    border: 1px solid var(--matrix-green);
+    border-radius: 6px;
+    padding: 20px;
+    margin: 30px auto;
+    max-width: 600px;
+    text-align: left;
+}
+
+.mission-brief p {
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+.accent {
+    color: var(--neon-green);
+    font-weight: 700;
+    text-shadow: 0 0 5px var(--neon-green);
+}
+
+/* ========================================
+   FORM INPUTS
+   ======================================== */
+
+.input-group {
+    margin: 30px auto;
+    max-width: 500px;
+    text-align: left;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in 4s forwards;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: var(--matrix-green);
+}
+
+.matrix-input {
+    width: 100%;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid var(--matrix-green);
+    border-radius: 4px;
+    color: var(--matrix-green);
+    font-family: 'Courier Prime', monospace;
+    font-size: 1.1rem;
+    text-align: center;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.matrix-input:focus {
+    outline: none;
+    border-color: var(--neon-green);
+    box-shadow: 0 0 15px var(--neon-green);
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.matrix-input::placeholder {
+    color: var(--matrix-dark-green);
+    opacity: 0.5;
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.button-container {
+    margin: 30px auto;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in 4.5s forwards;
+}
+
+.matrix-button {
+    display: inline-block;
+    padding: 20px 40px;
+    background: rgba(0, 255, 0, 0.1);
+    border: 3px solid var(--matrix-green);
+    border-radius: 8px;
+    color: var(--matrix-green);
+    font-family: 'Orbitron', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.matrix-button:hover {
+    background: rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 30px var(--neon-green);
+    transform: translateY(-3px);
+}
+
+.matrix-button.pulse {
+    animation: buttonPulse 2s infinite;
+}
+
+.button-text {
+    display: block;
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+}
+
+.button-subtitle {
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    font-weight: 400;
+}
+
+.matrix-button.secondary {
+    border-color: var(--cyber-blue);
+    color: var(--cyber-blue);
+}
+
+.matrix-button.secondary:hover {
+    box-shadow: 0 0 30px var(--cyber-blue);
+}
+
+/* ========================================
+   SYSTEM STATS
+   ======================================== */
+
+.system-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px auto;
+    max-width: 600px;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in 5s forwards;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+}
+
+.stat-value.warning {
+    color: var(--warning-yellow);
+    text-shadow: 0 0 10px var(--warning-yellow);
+}
+
+.stat-value.success {
+    color: var(--neon-green);
+}
+
+/* ========================================
+   QUIZ INTERFACE
+   ======================================== */
+
+.quiz-body {
+    padding: 20px;
+}
+
+.quiz-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: var(--terminal-bg);
+    border: 2px solid var(--matrix-green);
+    border-radius: 8px;
+    box-shadow: var(--border-glow);
+}
+
+.progress-label,
+.score-label {
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-bottom: 5px;
+}
+
+.progress-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    color: var(--neon-green);
+    font-weight: 700;
+}
+
+.score-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    color: var(--warning-yellow);
+    font-weight: 900;
+    text-shadow: 0 0 15px var(--warning-yellow);
+}
+
+/* Progress Bar */
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid var(--matrix-green);
+    border-radius: 5px;
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--matrix-green), var(--neon-green));
+    width: 0%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 15px var(--neon-green);
+}
+
+/* Terminal Log */
+.terminal-log {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--matrix-green);
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+}
+
+/* Question Container */
+.question-container {
+    background: var(--terminal-bg);
+    border: 2px solid var(--matrix-green);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: var(--border-glow);
+    animation: slideIn 0.5s ease-out;
+}
+
+.category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(0, 255, 255, 0.1);
+    border: 1px solid var(--cyber-blue);
+    border-radius: 20px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: var(--cyber-blue);
+}
+
+.badge-icon {
+    font-size: 1.2rem;
+}
+
+.question-box {
+    margin: 30px 0;
+    padding: 25px;
+    background: rgba(0, 255, 0, 0.05);
+    border-left: 4px solid var(--neon-green);
+    border-radius: 6px;
+}
+
+.question-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: var(--matrix-green);
+    text-shadow: 0 0 10px var(--matrix-green);
+}
+
+/* Options */
+.options-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.option-button {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid var(--matrix-green);
+    border-radius: 8px;
+    color: var(--matrix-green);
+    font-family: 'Courier Prime', monospace;
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.option-button:hover {
+    background: rgba(0, 255, 0, 0.1);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+    transform: translateX(10px);
+}
+
+.option-button.selected {
+    background: rgba(0, 255, 0, 0.2);
+    border-color: var(--neon-green);
+}
+
+.option-button.correct {
+    background: rgba(0, 255, 0, 0.3);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 30px var(--neon-green);
+    animation: correctPulse 0.5s ease;
+}
+
+.option-button.incorrect {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: var(--error-red);
+    box-shadow: 0 0 30px var(--error-red);
+    animation: shake 0.5s ease;
+}
+
+.option-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.option-label {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: rgba(0, 255, 0, 0.2);
+    border: 1px solid var(--matrix-green);
+    border-radius: 50%;
+    margin-right: 15px;
+    font-weight: 700;
+    font-family: 'Orbitron', monospace;
+}
+
+.option-text {
+    vertical-align: middle;
+}
+
+/* Action Buttons */
+.action-buttons {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.next-button {
+    padding: 15px 40px;
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid var(--cyber-blue);
+    border-radius: 6px;
+    color: var(--cyber-blue);
+    font-family: 'Orbitron', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.next-button:hover {
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 20px var(--cyber-blue);
+}
+
+.arrow {
+    margin-left: 10px;
+    font-size: 1.5rem;
+}
+
+/* Feedback Overlay */
+.feedback-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.feedback-content {
+    text-align: center;
+    animation: scaleIn 0.5s ease;
+}
+
+.feedback-icon {
+    font-size: 8rem;
+    margin-bottom: 20px;
+    animation: bounce 0.6s ease;
+}
+
+.feedback-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-shadow: 0 0 30px currentColor;
+}
+
+.feedback-message {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* Loading Screen */
+.loading-screen {
+    text-align: center;
+    padding: 40px;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(0, 255, 0, 0.2);
+    border-top-color: var(--neon-green);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.loading-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    color: var(--neon-green);
+    animation: pulse 1.5s infinite;
+}
+
+/* ========================================
+   RESULTS PAGE
+   ======================================== */
+
+.result-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 30px;
+}
+
+.result-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.result-title {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.scan-line {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+    animation: scan 2s linear infinite;
+}
+
+.results-terminal {
+    background: var(--terminal-bg);
+    border: 2px solid var(--matrix-green);
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: var(--border-glow);
+}
+
+/* Score Panel */
+.score-panel {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.score-circle {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle-bg {
+    fill: none;
+    stroke: rgba(0, 255, 0, 0.1);
+    stroke-width: 8;
+}
+
+.progress-ring-circle {
+    fill: none;
+    stroke: var(--neon-green);
+    stroke-width: 8;
+    stroke-dasharray: 502;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 10px var(--neon-green));
+    transition: stroke-dashoffset 2s ease;
+}
+
+.score-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.score-number {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--neon-green);
+    text-shadow: 0 0 20px var(--neon-green);
+}
+
+.score-percent {
+    font-size: 1.2rem;
+    color: var(--matrix-green);
+    margin-top: 5px;
+}
+
+/* Rank Display */
+.rank-display {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.rank-badge {
+    display: inline-block;
+    padding: 30px;
+    background: rgba(0, 255, 0, 0.05);
+    border: 3px solid var(--neon-green);
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+}
+
+.rank-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.rank-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--neon-green);
+    text-shadow: 0 0 20px var(--neon-green);
+    margin-bottom: 10px;
+}
+
+.rank-subtitle {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 40px 0;
+}
+
+.stat-card {
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid var(--matrix-green);
+    border-radius: 8px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.4);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--neon-green);
+    text-shadow: 0 0 15px var(--neon-green);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-top: 10px;
+}
+
+/* Performance Message */
+.performance-message {
+    margin: 40px 0;
+    padding: 25px;
+    background: rgba(0, 0, 0, 0.4);
+    border-left: 4px solid var(--neon-green);
+    border-radius: 6px;
+}
+
+.message-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.message-text.success {
+    color: var(--neon-green);
+}
+
+.message-text.warning {
+    color: var(--warning-yellow);
+}
+
+.message-text.error {
+    color: var(--error-red);
+}
+
+.message-text .icon {
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+
+/* Review Section */
+.review-section {
+    margin: 40px 0;
+}
+
+.review-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.answers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+.answer-item {
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--matrix-green);
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.answer-item.correct {
+    border-color: var(--neon-green);
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.answer-item.incorrect {
+    border-color: var(--error-red);
+    background: rgba(255, 0, 0, 0.1);
+}
+
+.answer-number {
+    font-weight: 700;
+}
+
+.answer-status {
+    font-size: 0.85rem;
+}
+
+/* Result Actions */
+.result-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInText {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes buttonPulse {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
+    }
+}
+
+@keyframes glitchEffect {
+    0%, 90%, 100% {
+        transform: translate(0);
+    }
+    92% {
+        transform: translate(-2px, 2px);
+    }
+    94% {
+        transform: translate(2px, -2px);
+    }
+    96% {
+        transform: translate(-2px, -2px);
+    }
+    98% {
+        transform: translate(2px, 2px);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes correctPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes scan {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.cursor-blink {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+    .glitch {
+        font-size: 2rem;
+    }
+
+    .terminal-container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .quiz-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .result-actions {
+        flex-direction: column;
+    }
+
+    .result-title {
+        font-size: 2.5rem;
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.success {
+    color: var(--neon-green);
+}
+
+.warning {
+    color: var(--warning-yellow);
+}
+
+.error {
+    color: var(--error-red);
+}
+
+.info {
+    color: var(--cyber-blue);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}

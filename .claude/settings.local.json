@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(C:ProgramDatachocolateybinpython3.13.exe comprehensive_tests.py)",
+      "Bash(\"C:\\ProgramData\\chocolatey\\bin\\python3.13.exe\" comprehensive_tests.py)",
+      "Bash(py comprehensive_tests.py)",
+      "Bash(py:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

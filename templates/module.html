@@ -1,0 +1,918 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - {{ module_data['title'] }}{% endblock %}
+
+{% block content %}
+<!-- Mission Header -->
+<div class="card" style="text-align: center; background: linear-gradient(135deg, rgba(255, 68, 68, 0.2), rgba(255, 170, 0, 0.1)); border: 2px solid #ff4444; margin-bottom: 2rem; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 68, 68, 0.1) 10px, rgba(255, 68, 68, 0.1) 20px); opacity: 0.3;"></div>
+
+    <div style="position: relative; z-index: 2;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div style="background: rgba(255, 68, 68, 0.2); color: #ff4444; padding: 0.5rem 1rem; border-radius: 6px; font-family: 'Orbitron', monospace; font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">
+                MISSION BRIEFING
+            </div>
+            <div style="background: rgba(0, 0, 0, 0.5); padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid rgba(255, 68, 68, 0.3);">
+                <span style="color: #ff4444; font-family: 'Orbitron', monospace; font-size: 0.8rem; font-weight: 600;">
+                    THREAT LEVEL: {{ module_data['difficulty'].upper() }}
+                </span>
+            </div>
+        </div>
+
+        <div style="font-size: 5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 20px #ff4444); animation: float 4s ease-in-out infinite;">
+            {{ module_data['emoji'] }}
+        </div>
+
+        <div class="difficulty-badge difficulty-{{ module_data['difficulty'].lower() }}" style="margin-bottom: 1rem; font-size: 1rem; padding: 0.75rem 1.5rem;">
+            {{ module_data['difficulty'].upper() }} THREAT
+        </div>
+
+        <h1 style="margin-bottom: 1rem; color: #00ffff; font-family: 'Orbitron', monospace; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 20px #00ffff;">
+            {{ module_data['title'] }}
+        </h1>
+
+        <p style="font-size: 1.25rem; color: #a0c4ff; margin-bottom: 2rem; line-height: 1.6; font-family: 'Rajdhani', monospace; max-width: 600px; margin-left: auto; margin-right: auto;">
+            {{ module_data['description'] }}
+        </p>
+
+        <!-- Mission Objectives -->
+        <div style="background: rgba(0, 0, 0, 0.5); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(0, 255, 255, 0.3); margin-bottom: 2rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                <div>
+                    <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">
+                        MISSION REWARD
+                    </div>
+                    <div style="color: #00ffff; font-weight: 700; font-size: 1.5rem; font-family: 'Orbitron', monospace;">
+                        {{ module_data['points_reward'] }} CYBER POINTS
+                    </div>
+                </div>
+                <div>
+                    <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">
+                        QUESTIONS
+                    </div>
+                    <div style="color: #ffaa00; font-weight: 700; font-size: 1.5rem; font-family: 'Orbitron', monospace;">
+                        {{ module_data['questions']|length }} CHALLENGES
+                    </div>
+                </div>
+                <div>
+                    <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">
+                        PASS REQUIREMENT
+                    </div>
+                    <div style="color: #ff4444; font-weight: 700; font-size: 1.5rem; font-family: 'Orbitron', monospace;">
+                        60% ACCURACY
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scenario Conversation -->
+<div id="scenarioConversation" class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(0, 136, 255, 0.1), rgba(0, 255, 255, 0.05)); border: 2px solid #0088ff; min-height: 400px; position: relative;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="color: #00ffff; font-family: 'Orbitron', monospace; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem;">
+            📡 INTERCEPTED COMMUNICATION
+        </h2>
+        <p style="color: #a0c4ff; font-family: 'Rajdhani', monospace; font-size: 1rem;">
+            Intelligence gathered from field operatives
+        </p>
+    </div>
+
+    <!-- Chat Container -->
+    <div id="chatContainer" style="background: rgba(0, 0, 0, 0.5); border-radius: 12px; padding: 2rem; min-height: 350px; border: 1px solid rgba(0, 136, 255, 0.3); position: relative; overflow: hidden;">
+        <!-- Chat messages will appear here -->
+        <div id="chatMessages" style="max-width: 800px; margin: 0 auto;"></div>
+
+        <!-- Typing indicator -->
+        <div id="typingIndicator" style="display: none; align-items: center; gap: 0.5rem; margin-top: 1rem; padding: 1rem; background: rgba(0, 136, 255, 0.1); border-radius: 8px; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <div class="typing-dots" style="display: flex; gap: 0.3rem;">
+                <span style="width: 8px; height: 8px; background: #0088ff; border-radius: 50%; animation: typing-bounce 1.4s infinite ease-in-out;"></span>
+                <span style="width: 8px; height: 8px; background: #0088ff; border-radius: 50%; animation: typing-bounce 1.4s infinite ease-in-out 0.2s;"></span>
+                <span style="width: 8px; height: 8px; background: #0088ff; border-radius: 50%; animation: typing-bounce 1.4s infinite ease-in-out 0.4s;"></span>
+            </div>
+            <span style="color: #0088ff; font-family: 'Rajdhani', monospace; font-size: 0.9rem;" id="typingName"></span>
+        </div>
+    </div>
+
+    <!-- Start Button -->
+    <div id="startConversation" style="text-align: center; margin-top: 2rem;">
+        <button type="button" class="btn" style="background: linear-gradient(135deg, #0088ff, #00ffff); border: 2px solid #00ffff; font-size: 1.1rem; padding: 1rem 2.5rem; font-family: 'Orbitron', monospace; font-weight: 700;" onclick="startScenario()">
+            <span style="margin-right: 0.5rem;">▶️</span>
+            BEGIN SCENARIO BRIEFING
+        </button>
+    </div>
+
+    <!-- Controls (hidden initially) -->
+    <div id="scenarioControls" style="display: none; text-align: center; margin-top: 2rem; gap: 1rem; justify-content: center;">
+        <button type="button" class="btn" style="background: rgba(255, 170, 0, 0.2); border: 2px solid #ffaa00; padding: 0.75rem 1.5rem; font-family: 'Orbitron', monospace; font-size: 0.9rem;" onclick="toggleAudio()" id="audioBtn">
+            <span id="audioIcon">🔊</span> SOUND ON
+        </button>
+        <button type="button" class="btn" style="background: rgba(255, 68, 68, 0.2); border: 2px solid #ff4444; padding: 0.75rem 1.5rem; font-family: 'Orbitron', monospace; font-size: 0.9rem;" onclick="skipScenario()">
+            <span style="margin-right: 0.3rem;">⏭️</span> SKIP BRIEFING
+        </button>
+    </div>
+
+    <!-- Continue Button (hidden initially) -->
+    <div id="continueToMission" style="display: none; text-align: center; margin-top: 2rem;">
+        <button type="button" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2.5rem; font-family: 'Orbitron', monospace; font-weight: 700; background: linear-gradient(135deg, #00ff88, #00ffff); border-color: #00ff88;" onclick="proceedToMission()">
+            <span style="margin-right: 0.5rem;">✓</span>
+            PROCEED TO MISSION
+        </button>
+    </div>
+</div>
+
+<!-- Mission Form (hidden initially) -->
+<div id="missionSection" style="display: none;">
+<form method="POST" action="{{ url_for('submit_module', module_id=module_id) }}" id="missionForm">
+    {% for i, question in enumerate(module_data['questions']) %}
+    <div class="card" style="margin-bottom: 2rem; border-left: 4px solid #0088ff; position: relative; overflow: hidden;">
+        <!-- Question Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div style="background: rgba(0, 136, 255, 0.2); color: #0088ff; padding: 0.75rem 1.5rem; border-radius: 6px; font-family: 'Orbitron', monospace; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+                CHALLENGE {{ i+1 }} / {{ module_data['questions']|length }}
+            </div>
+            <div style="color: #00ff88; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                [ANALYZING THREAT PATTERN]
+            </div>
+        </div>
+
+        <!-- Question Text -->
+        <div style="background: rgba(0, 0, 0, 0.3); padding: 2rem; border-radius: 8px; border: 1px solid rgba(0, 136, 255, 0.3); margin-bottom: 2rem;">
+            <h3 style="color: #00ffff; margin-bottom: 1.5rem; font-size: 1.4rem; font-family: 'Rajdhani', monospace; line-height: 1.5;">
+                {{ question['text'] }}
+            </h3>
+        </div>
+
+        <!-- Answer Options -->
+        <div style="display: grid; gap: 1rem;">
+            {% for j, option in enumerate(question['options']) %}
+            <label class="option" style="display: flex; align-items: center; background: rgba(0, 136, 255, 0.05); border: 2px solid rgba(0, 136, 255, 0.2); border-radius: 8px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; font-family: 'Rajdhani', monospace; font-size: 1.1rem; position: relative;"
+                   onmouseover="this.style.background='rgba(0, 136, 255, 0.1)'; this.style.borderColor='#0088ff'; this.style.transform='translateX(8px)'"
+                   onmouseout="this.style.background='rgba(0, 136, 255, 0.05)'; this.style.borderColor='rgba(0, 136, 255, 0.2)'; this.style.transform=''">
+
+                <input type="radio" name="q{{ i }}" value="{{ j }}" required
+                       style="margin-right: 1.5rem; transform: scale(1.3); accent-color: #0088ff;">
+
+                <div style="flex: 1;">
+                    <div style="color: #00ffff; font-weight: 600; margin-bottom: 0.25rem; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                        OPTION {{ 'ABCD'[j] }}
+                    </div>
+                    <div style="color: #a0c4ff;">
+                        {{ option }}
+                    </div>
+                </div>
+
+                <!-- Selection Indicator -->
+                <div class="selection-indicator" style="width: 20px; height: 20px; border: 2px solid #0088ff; border-radius: 50%; position: absolute; right: 1.5rem; opacity: 0; transition: all 0.3s ease;"></div>
+            </label>
+            {% endfor %}
+        </div>
+
+        <!-- Scanning Line Effect -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #0088ff, transparent); animation: scan-line 3s linear infinite; opacity: 0.5;"></div>
+    </div>
+    {% endfor %}
+
+    <!-- Submit Section -->
+    <div style="text-align: center; margin: 3rem 0;">
+        <div style="background: rgba(0, 255, 136, 0.1); border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">⚠️</span>
+                <h3 style="color: #00ff88; font-family: 'Orbitron', monospace; margin: 0; text-transform: uppercase;">
+                    MISSION PARAMETERS
+                </h3>
+            </div>
+            <p style="color: #a0c4ff; font-family: 'Rajdhani', monospace; line-height: 1.6; margin-bottom: 1rem;">
+                Analyze each cyber threat scenario carefully. You must achieve 60% accuracy to successfully complete this mission and earn the <strong style="color: #00ffff;">{{ module_data['badge'] }}</strong> achievement badge.
+            </p>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 6px; font-family: 'Orbitron', monospace; font-size: 0.9rem;">
+                <div style="color: #ff4444;">WARNING: All responses are final once submitted</div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn" style="font-size: 1.25rem; padding: 1.5rem 3rem; position: relative; overflow: hidden;">
+            <span style="margin-right: 1rem;">🚀</span>
+            EXECUTE MISSION
+            <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s;"></div>
+        </button>
+    </div>
+</form>
+</div>
+
+<style>
+@keyframes typing-bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-10px); }
+}
+
+@keyframes slide-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes message-pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.chat-message {
+    animation: message-pop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+</style>
+
+<script>
+// Audio context for sound effects
+let audioContext = null;
+let isAudioEnabled = true;
+
+// Initialize audio on user interaction
+function initAudio() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+// Play typing sound effect
+function playTypingSound() {
+    if (!isAudioEnabled || !audioContext) return;
+
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.frequency.value = 800;
+    oscillator.type = 'sine';
+
+    gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.05);
+}
+
+// Play message send sound
+function playMessageSound() {
+    if (!isAudioEnabled || !audioContext) return;
+
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.1);
+    oscillator.type = 'sine';
+
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.15);
+}
+
+// Play dramatic alert sound
+function playAlertSound() {
+    if (!isAudioEnabled || !audioContext) return;
+
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.type = 'sawtooth';
+    oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.3);
+
+    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+}
+
+// Play victory fanfare
+function playVictorySound() {
+    if (!isAudioEnabled || !audioContext) return;
+
+    const notes = [523.25, 659.25, 783.99]; // C, E, G
+    notes.forEach((freq, index) => {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.frequency.value = freq;
+        oscillator.type = 'sine';
+
+        const startTime = audioContext.currentTime + (index * 0.15);
+        gainNode.gain.setValueAtTime(0.2, startTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.3);
+
+        oscillator.start(startTime);
+        oscillator.stop(startTime + 0.3);
+    });
+}
+
+// Screen shake effect
+function shakeScreen(intensity = 5, duration = 300) {
+    const scenarioSection = document.getElementById('scenarioConversation');
+    if (!scenarioSection) return;
+
+    let shakeCount = 0;
+    const maxShakes = 10;
+    const shakeInterval = duration / maxShakes;
+
+    const interval = setInterval(() => {
+        if (shakeCount >= maxShakes) {
+            clearInterval(interval);
+            scenarioSection.style.transform = '';
+            return;
+        }
+
+        const x = (Math.random() - 0.5) * intensity;
+        const y = (Math.random() - 0.5) * intensity;
+        scenarioSection.style.transform = `translate(${x}px, ${y}px)`;
+        shakeCount++;
+    }, shakeInterval);
+}
+
+// Create confetti explosion
+function createConfetti() {
+    const colors = ['#00ffff', '#00ff88', '#0088ff', '#ffaa00', '#ff4444'];
+    const confettiCount = 50;
+
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.cssText = `
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            left: ${50 + (Math.random() - 0.5) * 20}%;
+            top: -20px;
+            z-index: 9999;
+            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+            pointer-events: none;
+        `;
+
+        document.body.appendChild(confetti);
+
+        const angle = (Math.random() - 0.5) * Math.PI;
+        const velocity = 5 + Math.random() * 10;
+        const tx = Math.cos(angle) * velocity * 100;
+        const ty = Math.random() * window.innerHeight + 500;
+        const rotation = Math.random() * 720 - 360;
+
+        confetti.animate([
+            { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+            { transform: `translate(${tx}px, ${ty}px) rotate(${rotation}deg)`, opacity: 0 }
+        ], {
+            duration: 2000 + Math.random() * 1000,
+            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        }).onfinish = () => confetti.remove();
+    }
+}
+
+// Random funny reactions
+const funnyReactions = [
+    '💥 POW!',
+    '🎯 BULLSEYE!',
+    '⚡ ZAP!',
+    '🔥 FIRE!',
+    '💪 EPIC!',
+    '🎊 BOOM!',
+    '✨ PERFECT!',
+    '🚀 LEGENDARY!'
+];
+
+function showRandomReaction() {
+    const reaction = funnyReactions[Math.floor(Math.random() * funnyReactions.length)];
+    const reactionDiv = document.createElement('div');
+    reactionDiv.textContent = reaction;
+    reactionDiv.style.cssText = `
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        font-size: 4rem;
+        font-family: 'Orbitron', monospace;
+        font-weight: 900;
+        color: #00ffff;
+        text-shadow: 0 0 30px #00ffff;
+        z-index: 9999;
+        pointer-events: none;
+    `;
+
+    document.body.appendChild(reactionDiv);
+
+    reactionDiv.animate([
+        { transform: 'translate(-50%, -50%) scale(0) rotate(-10deg)', opacity: 0 },
+        { transform: 'translate(-50%, -50%) scale(1.5) rotate(5deg)', opacity: 1, offset: 0.5 },
+        { transform: 'translate(-50%, -50%) scale(1) rotate(0deg)', opacity: 1, offset: 0.7 },
+        { transform: 'translate(-50%, -50%) scale(0) rotate(10deg)', opacity: 0 }
+    ], {
+        duration: 1500,
+        easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+    }).onfinish = () => reactionDiv.remove();
+}
+
+// Scenario conversations - 2 person format with humor and drama!
+const scenarios = {
+    phishing: [
+        { speaker: 'Commander Alex', avatar: '🕵️', side: 'left', message: 'Agent Nova! Red alert! Someone just clicked on a "You Won The Lottery" email... again. 😤', delay: 1000, mood: 'urgent' },
+        { speaker: 'Agent Nova', avatar: '👤', side: 'right', message: 'Not Kevin from accounting again?! That is the third time this month!', delay: 1500, mood: 'shocked' },
+        { speaker: 'Commander Alex', avatar: '🕵️', side: 'left', message: 'Yes. He also fell for the "Nigerian Prince" scam. We need to train everyone ASAP before Kevin bankrupts us all! 💸', delay: 2000, mood: 'dramatic' },
+        { speaker: 'Agent Nova', avatar: '👤', side: 'right', message: 'Understood! Show me the phishing emails. Time to become a Phish Fighter! 🎣', delay: 1500, mood: 'determined' },
+        { speaker: 'Commander Alex', avatar: '🕵️', side: 'left', message: 'Good! Remember - if it sounds too good to be true, it probably wants to steal your passwords. The fate of our coffee budget depends on you!', delay: 2000, mood: 'serious' },
+        { speaker: 'Agent Nova', avatar: '👤', side: 'right', message: 'Not the coffee budget! 😱 I am ready. Let the phishing hunt begin!', delay: 1500, mood: 'excited' }
+    ],
+    malware: [
+        { speaker: 'Security Chief', avatar: '🚨', side: 'left', message: '🚨 CODE RED! The CEO just downloaded "totally-not-a-virus.exe" because it promised to make his computer faster... 🤦', delay: 1000, mood: 'panic' },
+        { speaker: 'Field Agent', avatar: '🔬', side: 'right', message: 'Oh no... let me guess, it came from "definitelylegit-software.com"?', delay: 1500, mood: 'sarcastic' },
+        { speaker: 'Security Chief', avatar: '🚨', side: 'left', message: 'Worse. An email titled "Hot Singles In Your Area Want To Speed Up Your PC". Now we have ransomware, trojans, and something that keeps playing Never Gonna Give You Up! 🎵', delay: 2500, mood: 'dramatic' },
+        { speaker: 'Field Agent', avatar: '🔬', side: 'right', message: 'We got Rick-Rolled by malware?! This is personal now! 😤', delay: 1500, mood: 'angry' },
+        { speaker: 'Security Chief', avatar: '🚨', side: 'left', message: 'I need you to identify each malware type. The entire network is at stake... and my sanity! Help me before it spreads to the coffee machine! ☕', delay: 2000, mood: 'desperate' },
+        { speaker: 'Field Agent', avatar: '🔬', side: 'right', message: 'NOT THE COFFEE MACHINE! I am on it! Time to hunt these digital monsters! 💪', delay: 1500, mood: 'heroic' }
+    ],
+    passwords: [
+        { speaker: 'Admin Rachel', avatar: '🔐', side: 'left', message: 'Marcus... I just saw the password audit results. I need you to sit down for this... 😰', delay: 1000, mood: 'worried' },
+        { speaker: 'Trainee Marcus', avatar: '👨‍💻', side: 'right', message: 'That bad? Is someone using "password" as their password again?', delay: 1500, mood: 'curious' },
+        { speaker: 'Admin Rachel', avatar: '🔐', side: 'left', message: 'Oh Marcus, sweet summer child... Someone is using "123456". Another person has "qwerty". And the CEO... his password is literally "CEO". 🤦‍♀️', delay: 2500, mood: 'facepalm' },
+        { speaker: 'Trainee Marcus', avatar: '👨‍💻', side: 'right', message: 'WHAT?! A 5-year-old could hack us! This is like leaving the front door open with a neon "ROB ME" sign! 😱', delay: 1800, mood: 'horrified' },
+        { speaker: 'Admin Rachel', avatar: '🔐', side: 'left', message: 'It gets worse... Janet from HR uses "ilovecats" for EVERYTHING. Bank, email, nuclear launch codes... okay maybe not that last one, but you get it! 😅', delay: 2200, mood: 'dramatic' },
+        { speaker: 'Trainee Marcus', avatar: '👨‍💻', side: 'right', message: 'This is a catastrophe! Teach me password security before hackers have a field day! I promise I will take this seriously! 🛡️', delay: 1600, mood: 'determined' }
+    ],
+    network: [
+        { speaker: 'Network Ops', avatar: '📡', side: 'left', message: '🚨 SOMEONE IS KNOCKING ON OUR FIREWALL! And by knocking, I mean aggressively trying every possible door, window, and chimney! 🏠', delay: 1000, mood: 'alert' },
+        { speaker: 'Cyber Analyst', avatar: '🛡️', side: 'right', message: 'Hackers or just the intern testing things again? Remember when Tim crashed the network trying to download "research materials"? 😏', delay: 1800, mood: 'suspicious' },
+        { speaker: 'Network Ops', avatar: '📡', side: 'left', message: 'Not Tim this time! Real hackers! They are port scanning, probing vulnerabilities, basically doing everything except sending us a friendly email saying "Hey, we are going to hack you now!" 📧', delay: 2500, mood: 'stressed' },
+        { speaker: 'Cyber Analyst', avatar: '🛡️', side: 'right', message: 'That would be polite at least! Okay, what is the damage report? Did they get past the firewall?', delay: 1600, mood: 'concerned' },
+        { speaker: 'Network Ops', avatar: '📡', side: 'left', message: 'Not yet! But they are persistent like a cat trying to open a door at 3 AM. 🐱 We need to strengthen our defenses NOW before they find a weakness!', delay: 2200, mood: 'urgent' },
+        { speaker: 'Cyber Analyst', avatar: '🛡️', side: 'right', message: 'Game on! Time to show these hackers why messing with our network is a BAD idea! I will secure every port like my life depends on it! 💪🔒', delay: 1700, mood: 'confident' }
+    ]
+};
+
+// Get scenario based on module
+function getScenarioForModule() {
+    const moduleTitle = '{{ module_data["title"] }}'.toLowerCase();
+
+    if (moduleTitle.includes('phish')) return scenarios.phishing;
+    if (moduleTitle.includes('malware')) return scenarios.malware;
+    if (moduleTitle.includes('password')) return scenarios.passwords;
+    if (moduleTitle.includes('network')) return scenarios.network;
+
+    // Default generic scenario
+    return [
+        { speaker: 'Mission Control', avatar: '🎯', side: 'left', message: 'Agent, we have a critical security situation developing.', delay: 1000 },
+        { speaker: 'Field Operative', avatar: '🕵️', side: 'right', message: 'What is the threat assessment?', delay: 1500 },
+        { speaker: 'Mission Control', avatar: '🎯', side: 'left', message: 'High priority. We need your expertise to analyze and respond correctly.', delay: 1800 },
+        { speaker: 'Field Operative', avatar: '🕵️', side: 'right', message: 'Understood. Ready to proceed with the mission.', delay: 1500 }
+    ];
+}
+
+function createChatMessage(speaker, avatar, message, side = 'left') {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'chat-message';
+    messageDiv.style.cssText = `
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        ${side === 'right' ? 'flex-direction: row-reverse;' : ''}
+    `;
+
+    const avatarDiv = document.createElement('div');
+    avatarDiv.style.cssText = `
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, ${side === 'right' ? 'rgba(0, 255, 136, 0.3), rgba(0, 255, 255, 0.2)' : 'rgba(0, 136, 255, 0.3), rgba(0, 255, 255, 0.2)'});
+        border: 2px solid ${side === 'right' ? '#00ff88' : '#0088ff'};
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        box-shadow: 0 0 15px ${side === 'right' ? 'rgba(0, 255, 136, 0.5)' : 'rgba(0, 136, 255, 0.5)'};
+    `;
+    avatarDiv.textContent = avatar;
+
+    const contentDiv = document.createElement('div');
+    contentDiv.style.cssText = `
+        flex: 1;
+        max-width: 70%;
+    `;
+
+    const nameDiv = document.createElement('div');
+    nameDiv.style.cssText = `
+        color: ${side === 'right' ? '#00ff88' : '#00ffff'};
+        font-family: 'Orbitron', monospace;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        ${side === 'right' ? 'text-align: right;' : ''}
+    `;
+    nameDiv.textContent = speaker;
+
+    const bubbleDiv = document.createElement('div');
+    bubbleDiv.className = 'message-bubble';
+    bubbleDiv.style.cssText = `
+        background: ${side === 'right' ? 'linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 255, 255, 0.1))' : 'rgba(0, 136, 255, 0.2)'};
+        border: 1px solid ${side === 'right' ? 'rgba(0, 255, 136, 0.3)' : 'rgba(0, 136, 255, 0.4)'};
+        border-radius: ${side === 'right' ? '12px 12px 0 12px' : '12px 12px 12px 0'};
+        padding: 1rem 1.25rem;
+        color: #ffffff;
+        font-family: 'Rajdhani', monospace;
+        font-size: 1.05rem;
+        line-height: 1.6;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        min-height: 40px;
+    `;
+    bubbleDiv.textContent = '';
+
+    contentDiv.appendChild(nameDiv);
+    contentDiv.appendChild(bubbleDiv);
+
+    if (side === 'right') {
+        messageDiv.appendChild(contentDiv);
+        messageDiv.appendChild(avatarDiv);
+    } else {
+        messageDiv.appendChild(avatarDiv);
+        messageDiv.appendChild(contentDiv);
+    }
+
+    return { element: messageDiv, bubble: bubbleDiv };
+}
+
+async function typeMessage(element, text, speed = 40) {
+    element.textContent = '';
+    let charCount = 0;
+
+    for (let i = 0; i < text.length; i++) {
+        element.textContent += text.charAt(i);
+        charCount++;
+
+        // Play typing sound every 3 characters
+        if (charCount % 3 === 0) {
+            playTypingSound();
+        }
+
+        // Variable speed - faster for spaces
+        const delay = text.charAt(i) === ' ' ? speed / 2 : speed;
+        await new Promise(resolve => setTimeout(resolve, delay));
+    }
+}
+
+function showTypingIndicator(speakerName) {
+    const indicator = document.getElementById('typingIndicator');
+    const nameElement = document.getElementById('typingName');
+    nameElement.textContent = `${speakerName} is typing...`;
+    indicator.style.display = 'flex';
+}
+
+function hideTypingIndicator() {
+    document.getElementById('typingIndicator').style.display = 'none';
+}
+
+let scenarioRunning = false;
+
+function toggleAudio() {
+    isAudioEnabled = !isAudioEnabled;
+    const audioBtn = document.getElementById('audioBtn');
+    const audioIcon = document.getElementById('audioIcon');
+
+    if (isAudioEnabled) {
+        audioBtn.innerHTML = '<span id="audioIcon">🔊</span> SOUND ON';
+        showCyberNotification('Audio enabled', 'success');
+    } else {
+        audioBtn.innerHTML = '<span id="audioIcon">🔇</span> SOUND OFF';
+        showCyberNotification('Audio muted', 'info');
+    }
+}
+
+function skipScenario() {
+    scenarioRunning = false;
+    document.getElementById('scenarioControls').style.display = 'none';
+    document.getElementById('continueToMission').style.display = 'block';
+    hideTypingIndicator();
+    showCyberNotification('Briefing skipped. Proceeding to mission.', 'warning');
+}
+
+async function startScenario() {
+    // Initialize audio on first interaction
+    initAudio();
+
+    scenarioRunning = true;
+
+    const startBtn = document.getElementById('startConversation');
+    startBtn.style.display = 'none';
+
+    // Show controls
+    const controls = document.getElementById('scenarioControls');
+    controls.style.display = 'flex';
+
+    const chatMessages = document.getElementById('chatMessages');
+    const conversation = getScenarioForModule();
+
+    console.log('Starting scenario with conversation:', conversation);
+
+    if (!conversation || conversation.length === 0) {
+        console.error('No conversation found!');
+        showCyberNotification('Error loading scenario. Please refresh.', 'error');
+        return;
+    }
+
+    // Dramatic intro
+    showCyberNotification('🚨 INCOMING TRANSMISSION... DECRYPTING... 🚨', 'warning');
+    playAlertSound();
+    shakeScreen(3, 200);
+
+    for (let i = 0; i < conversation.length; i++) {
+        if (!scenarioRunning) break; // Allow skipping
+
+        const chat = conversation[i];
+
+        console.log(`Processing message ${i + 1}:`, chat);
+
+        // Show typing indicator
+        showTypingIndicator(chat.speaker);
+        await new Promise(resolve => setTimeout(resolve, chat.delay));
+
+        if (!scenarioRunning) break; // Check again after delay
+
+        // Hide typing and create message
+        hideTypingIndicator();
+        const { element: messageElement, bubble: bubbleElement } = createChatMessage(
+            chat.speaker,
+            chat.avatar,
+            chat.message,
+            chat.side
+        );
+        chatMessages.appendChild(messageElement);
+
+        // Scroll to bottom smoothly
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        // Type out the message with sound
+        await typeMessage(bubbleElement, chat.message, 35);
+
+        if (!scenarioRunning) break;
+
+        // Play message sent sound
+        playMessageSound();
+
+        // Add dramatic effects for certain moods
+        if (chat.mood === 'panic' || chat.mood === 'urgent' || chat.mood === 'alert') {
+            shakeScreen(2, 150);
+            playAlertSound();
+        } else if (chat.mood === 'shocked' || chat.mood === 'horrified') {
+            messageElement.style.animation = 'message-pop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+        } else if (chat.mood === 'heroic' || chat.mood === 'determined') {
+            showRandomReaction();
+        }
+
+        // Wait before next message
+        await new Promise(resolve => setTimeout(resolve, 600));
+    }
+
+    if (scenarioRunning) {
+        // Hide controls
+        controls.style.display = 'none';
+
+        // Epic finish!
+        createConfetti();
+        playVictorySound();
+        shakeScreen(4, 400);
+
+        setTimeout(() => {
+            showCyberNotification('🎯 BRIEFING COMPLETE! TIME TO SAVE THE DAY! 🚀', 'success');
+            // Show continue button
+            document.getElementById('continueToMission').style.display = 'block';
+        }, 500);
+    }
+
+    scenarioRunning = false;
+}
+
+function proceedToMission() {
+    // Epic transition!
+    playVictorySound();
+
+    // Scroll to mission section
+    const missionSection = document.getElementById('missionSection');
+    missionSection.style.display = 'block';
+
+    // Smooth scroll
+    missionSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Hide scenario section with animation
+    const scenarioSection = document.getElementById('scenarioConversation');
+    scenarioSection.style.transition = 'all 0.5s ease';
+    scenarioSection.style.opacity = '0';
+    scenarioSection.style.transform = 'translateY(-20px)';
+
+    setTimeout(() => {
+        scenarioSection.style.display = 'none';
+    }, 500);
+
+    showCyberNotification('🚀 Mission Started', 'success');
+}
+
+// Question form scripts
+document.addEventListener('DOMContentLoaded', function() {
+        // Add radio button selection effects
+        const radioInputs = document.querySelectorAll('input[type="radio"]');
+        radioInputs.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Remove selection from all options in this question
+                const questionOptions = document.querySelectorAll(`input[name="${this.name}"]`);
+                questionOptions.forEach(option => {
+                    const indicator = option.closest('.option').querySelector('.selection-indicator');
+                    const label = option.closest('.option');
+                    indicator.style.opacity = '0';
+                    indicator.style.background = 'transparent';
+                    label.style.borderColor = 'rgba(0, 136, 255, 0.2)';
+                    label.style.background = 'rgba(0, 136, 255, 0.05)';
+                });
+
+                // Add selection to chosen option
+                const selectedIndicator = this.closest('.option').querySelector('.selection-indicator');
+                const selectedLabel = this.closest('.option');
+                selectedIndicator.style.opacity = '1';
+                selectedIndicator.style.background = '#0088ff';
+                selectedLabel.style.borderColor = '#0088ff';
+                selectedLabel.style.background = 'rgba(0, 136, 255, 0.15)';
+
+                // Add selection sound effect (visual) with fun feedback
+                selectedLabel.style.animation = 'glitch 0.2s ease-in-out';
+
+                // Random encouraging messages
+                const encouragement = [
+                    '🎯 Nice choice!',
+                    '💡 Going with your gut!',
+                    '🤔 Interesting...',
+                    '⚡ Locked in!',
+                    '🎲 Bold move!',
+                    '🔥 Feeling confident!',
+                    '👀 We see you!',
+                    '✨ That is your final answer?'
+                ];
+                const randomMsg = encouragement[Math.floor(Math.random() * encouragement.length)];
+
+                // Show mini notification
+                const miniNotif = document.createElement('div');
+                miniNotif.textContent = randomMsg;
+                miniNotif.style.cssText = `
+                    position: fixed;
+                    right: 20px;
+                    top: 100px;
+                    background: rgba(0, 136, 255, 0.9);
+                    color: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 6px;
+                    font-family: 'Orbitron', monospace;
+                    font-size: 0.9rem;
+                    z-index: 9999;
+                    pointer-events: none;
+                    box-shadow: 0 0 20px rgba(0, 136, 255, 0.5);
+                `;
+                document.body.appendChild(miniNotif);
+
+                miniNotif.animate([
+                    { transform: 'translateX(200px)', opacity: 0 },
+                    { transform: 'translateX(0)', opacity: 1, offset: 0.3 },
+                    { transform: 'translateX(0)', opacity: 1, offset: 0.7 },
+                    { transform: 'translateX(200px)', opacity: 0 }
+                ], {
+                    duration: 2000,
+                    easing: 'ease-in-out'
+                }).onfinish = () => miniNotif.remove();
+
+                setTimeout(() => {
+                    selectedLabel.style.animation = '';
+                }, 200);
+            });
+        });
+
+        // Form submission effects
+        const form = document.getElementById('missionForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', function(e) {
+            // Check if all questions are answered
+            const totalQuestions = {{ module_data['questions']|length }};
+            let answeredQuestions = 0;
+
+            for (let i = 0; i < totalQuestions; i++) {
+                const questionInputs = document.querySelectorAll(`input[name="q${i}"]`);
+                const isAnswered = Array.from(questionInputs).some(input => input.checked);
+                if (isAnswered) answeredQuestions++;
+            }
+
+            if (answeredQuestions < totalQuestions) {
+                e.preventDefault();
+                showCyberNotification(`MISSION INCOMPLETE - ${totalQuestions - answeredQuestions} CHALLENGES REMAINING`, 'error');
+                return;
+            }
+
+            // Show submission state
+            submitBtn.innerHTML = '<span style="margin-right: 1rem;">⏳</span>ANALYZING RESPONSES...';
+            submitBtn.disabled = true;
+
+            // Add dramatic submission effect
+            document.body.style.animation = 'scan-line 0.5s ease-in-out 3';
+
+            // Add scanning lines to all cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.borderColor = '#00ff88';
+                    card.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.3)';
+                    setTimeout(() => {
+                        card.style.borderColor = '';
+                        card.style.boxShadow = '';
+                    }, 500);
+                }, index * 200);
+            });
+        });
+
+        // Add progress indicator
+        function updateProgress() {
+            const totalQuestions = {{ module_data['questions']|length }};
+            let answeredQuestions = 0;
+
+            for (let i = 0; i < totalQuestions; i++) {
+                const questionInputs = document.querySelectorAll(`input[name="q${i}"]`);
+                const isAnswered = Array.from(questionInputs).some(input => input.checked);
+                if (isAnswered) answeredQuestions++;
+            }
+
+            const progress = (answeredQuestions / totalQuestions) * 100;
+
+            // Update submit button state
+            if (answeredQuestions === totalQuestions) {
+                submitBtn.style.background = 'linear-gradient(135deg, #00ff88, #0088ff)';
+                submitBtn.style.borderColor = '#00ff88';
+                submitBtn.innerHTML = '<span style="margin-right: 1rem;">🚀</span>EXECUTE MISSION [READY]';
+            } else {
+                submitBtn.style.background = '';
+                submitBtn.style.borderColor = '#0088ff';
+                submitBtn.innerHTML = `<span style="margin-right: 1rem;">🚀</span>EXECUTE MISSION [${answeredQuestions}/${totalQuestions}]`;
+            }
+        }
+
+        // Update progress on any radio button change
+        radioInputs.forEach(radio => {
+            radio.addEventListener('change', updateProgress);
+        });
+
+        // Initial progress update
+        updateProgress();
+
+        // Add typing effect to question text
+        const questions = document.querySelectorAll('h3');
+        questions.forEach((question, index) => {
+            const text = question.textContent;
+            question.textContent = '';
+
+            setTimeout(() => {
+                let i = 0;
+                const typeInterval = setInterval(() => {
+                    if (i < text.length) {
+                        question.textContent += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(typeInterval);
+                    }
+                }, 20);
+            }, index * 500);
+        });
+    });
+</script>
+{% endblock %}

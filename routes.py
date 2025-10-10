@@ -5,17 +5,32 @@ import json
 
 # Import functions from app.py (avoiding circular import)
 from app import (
-    MODULES, hash_password, safe_json_loads, log_activity,
+    MODULES, verify_password, safe_json_loads, log_activity,
     get_active_players, get_user_by_username, get_user_by_id,
     create_user, can_access_module, get_leaderboard,
-    MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH, MIN_PASSWORD_LENGTH, MAX_EMAIL_LENGTH, PASSING_PERCENTAGE
+    MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH, MIN_PASSWORD_LENGTH, MAX_EMAIL_LENGTH, PASSING_PERCENTAGE,
+    check_account_locked, record_failed_login, reset_login_attempts, SESSION_TIMEOUT_MINUTES,
+    is_admin, get_all_users, update_user_admin, delete_user_admin
 )
 
 # Create Flask app instance
 from flask import Flask
 import os
+from datetime import timedelta
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=SESSION_TIMEOUT_MINUTES)
+
+# Register Ollama AI routes
+try:
+    from ai_routes import register_ai_routes
+    register_ai_routes(app)
+    print("Ollama AI integration enabled")
+except ImportError as e:
+    print(f"AI not available: {e}")
+    print("   To enable: pip install openai")
+except Exception as e:
+    print(f"Could not register AI routes: {e}")
 
 
 @app.route('/')
@@ -33,18 +48,14 @@ def register():
             password = request.form.get('password', '')
             email = request.form.get('email', '').strip()
 
-            # Enhanced input validation
-            if not username or len(username) < MIN_USERNAME_LENGTH or len(username) > MAX_USERNAME_LENGTH:
-                flash(f'Agent codename must be between {MIN_USERNAME_LENGTH} and {MAX_USERNAME_LENGTH} characters long', 'error')
-            elif not password or len(password) < MIN_PASSWORD_LENGTH:
-                flash(f'Security clearance must be at least {MIN_PASSWORD_LENGTH} characters long', 'error')
-            elif len(email) > MAX_EMAIL_LENGTH:
-                flash('Email address is too long', 'error')
-            elif create_user(username, password, email):
+            # Create user with enhanced validation
+            success, message = create_user(username, password, email)
+
+            if success:
                 flash('Agent recruitment successful! Access granted to training platform.', 'success')
                 return redirect(url_for('index'))
             else:
-                flash('Agent codename already exists. Choose a different codename.', 'error')
+                flash(f'Registration failed: {message}', 'error')
         except Exception as e:
             flash('An error occurred during registration. Please try again.', 'error')
             print(f"Registration error: {e}")
@@ -67,11 +78,21 @@ def login():
             flash('Invalid credentials format', 'error')
             return redirect(url_for('index'))
 
+        # Check if account is locked
+        is_locked, minutes_remaining = check_account_locked(username)
+        if is_locked:
+            flash(f'Account locked due to too many failed attempts. Try again in {minutes_remaining} minutes.', 'error')
+            return redirect(url_for('index'))
+
         user = get_user_by_username(username)
 
-        if user and user[2] == hash_password(password):
+        if user and verify_password(password, user[2]):
+            # Reset login attempts on successful login
+            reset_login_attempts(username)
+
             session['user_id'] = user[0]
             session['username'] = user[1]
+            session.permanent = True  # Enable session timeout
 
             # Update last login and log activity
             try:
@@ -88,6 +109,9 @@ def login():
             log_activity(user[0], 'login', 'User logged in')
             return redirect(url_for('dashboard'))
         else:
+            # Record failed login attempt
+            if user:
+                record_failed_login(username)
             flash('Invalid agent credentials. Access denied.', 'error')
             return redirect(url_for('index'))
     except Exception as e:
@@ -236,6 +260,32 @@ def submit_module(module_id):
         passed = percentage >= PASSING_PERCENTAGE  # Need 60% to pass
         points_earned = module_data['points_reward'] if passed else 0
 
+        # Calculate streak (consecutive correct answers from the beginning)
+        streak = 0
+        for result in results:
+            if result['is_correct']:
+                streak += 1
+            else:
+                break
+
+        # Initialize achievement variables for both pass and fail cases
+        achievements_earned = []
+        bonus_points = 0
+
+        # Calculate achievement bonuses only if passed
+        if passed:
+            if percentage == 100:
+                achievements_earned.append('🏆 Perfect Score')
+                bonus_points += 50
+            if streak >= 3:
+                achievements_earned.append(f'🔥 {streak}-Question Streak')
+                bonus_points += streak * 5
+            if module_id == 1 and len(safe_json_loads(user[5], [])) == 0:
+                achievements_earned.append('⭐ First Mission Complete')
+                bonus_points += 25
+
+            points_earned += bonus_points
+
         # Update database if passed
         if passed:
             try:
@@ -292,7 +342,10 @@ def submit_module(module_id):
                                passed=passed,
                                points_earned=points_earned,
                                module_id=module_id,
-                               enumerate=enumerate)
+                               enumerate=enumerate,
+                               streak=streak,
+                               achievements_earned=achievements_earned,
+                               bonus_points=bonus_points)
     except Exception as e:
         flash('An error occurred while submitting the module. Please try again.', 'error')
         print(f"Module submission error: {e}")
@@ -356,3 +409,95 @@ def profile():
                            recent_sessions=recent_sessions,
                            MODULES=MODULES,
                            datetime=datetime)
+
+
+@app.route('/admin')
+def admin_panel():
+    """Admin panel for user management"""
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+
+    if not is_admin(session['user_id']):
+        flash('Access denied. Admin privileges required.', 'error')
+        return redirect(url_for('dashboard'))
+
+    users = get_all_users()
+    log_activity(session['user_id'], 'admin_panel_view', 'Admin viewed user management panel')
+
+    return render_template('admin.html',
+                           users=users,
+                           safe_json_loads=safe_json_loads,
+                           datetime=datetime)
+
+
+@app.route('/admin/user/<int:user_id>/edit', methods=['POST'])
+def admin_edit_user(user_id):
+    """Edit user details (admin only)"""
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+
+    if not is_admin(session['user_id']):
+        flash('Access denied. Admin privileges required.', 'error')
+        return redirect(url_for('dashboard'))
+
+    try:
+        username = request.form.get('username')
+        email = request.form.get('email')
+        total_score = request.form.get('total_score')
+        current_level = request.form.get('current_level')
+        is_admin_flag = request.form.get('is_admin') == 'on'
+
+        # Prepare update parameters
+        kwargs = {}
+        if username:
+            kwargs['username'] = username
+        if email:
+            kwargs['email'] = email
+        if total_score:
+            kwargs['total_score'] = int(total_score)
+        if current_level:
+            kwargs['current_level'] = int(current_level)
+        kwargs['is_admin'] = is_admin_flag
+
+        success, message = update_user_admin(user_id, **kwargs)
+
+        if success:
+            flash(f'User updated successfully', 'success')
+            log_activity(session['user_id'], 'admin_edit_user', f'Edited user {user_id}')
+        else:
+            flash(f'Error: {message}', 'error')
+
+    except Exception as e:
+        flash(f'Error updating user: {str(e)}', 'error')
+
+    return redirect(url_for('admin_panel'))
+
+
+@app.route('/admin/user/<int:user_id>/delete', methods=['POST'])
+def admin_delete_user(user_id):
+    """Delete user (admin only)"""
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+
+    if not is_admin(session['user_id']):
+        flash('Access denied. Admin privileges required.', 'error')
+        return redirect(url_for('dashboard'))
+
+    # Prevent admin from deleting themselves
+    if user_id == session['user_id']:
+        flash('Cannot delete your own account', 'error')
+        return redirect(url_for('admin_panel'))
+
+    try:
+        success, message = delete_user_admin(user_id)
+
+        if success:
+            flash('User deleted successfully', 'success')
+            log_activity(session['user_id'], 'admin_delete_user', f'Deleted user {user_id}')
+        else:
+            flash(f'Error: {message}', 'error')
+
+    except Exception as e:
+        flash(f'Error deleting user: {str(e)}', 'error')
+
+    return redirect(url_for('admin_panel'))

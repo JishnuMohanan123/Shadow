@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHADOW - Active Mission</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/matrix.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="quiz-body">
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Quiz Container -->
+    <div class="quiz-container">
+        <!-- Header with Progress -->
+        <div class="quiz-header">
+            <div class="progress-info">
+                <span class="progress-label">MISSION PROGRESS</span>
+                <span class="progress-text" id="progressText">LOADING...</span>
+            </div>
+            <div class="score-display">
+                <span class="score-label">SECURITY SCORE:</span>
+                <span class="score-value" id="scoreValue">0</span>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Terminal Log -->
+        <div class="terminal-log" id="terminalLog">
+            <p class="log-line">> ESTABLISHING SECURE CONNECTION...</p>
+            <p class="log-line">> LOADING MISSION DATA...</p>
+            <p class="log-line success">> READY</p>
+        </div>
+
+        <!-- Question Display -->
+        <div class="question-container" id="questionContainer" style="display: none;">
+            <!-- Category Badge -->
+            <div class="category-badge" id="categoryBadge">
+                <span class="badge-icon">⚡</span>
+                <span class="badge-text" id="categoryText">GENERAL</span>
+            </div>
+
+            <!-- Question Text -->
+            <div class="question-box">
+                <h2 class="question-text typing-text" id="questionText"></h2>
+            </div>
+
+            <!-- Options -->
+            <div class="options-container" id="optionsContainer">
+                <!-- Options will be dynamically loaded -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons" style="display: none;" id="actionButtons">
+                <button class="next-button" id="nextButton" onclick="loadNextQuestion()">
+                    <span>NEXT MISSION</span>
+                    <span class="arrow">→</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Feedback Display -->
+        <div class="feedback-overlay" id="feedbackOverlay" style="display: none;">
+            <div class="feedback-content">
+                <div class="feedback-icon" id="feedbackIcon"></div>
+                <div class="feedback-text" id="feedbackText"></div>
+                <div class="feedback-message" id="feedbackMessage"></div>
+            </div>
+        </div>
+
+        <!-- Loading Animation -->
+        <div class="loading-screen" id="loadingScreen">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">DECRYPTING NEXT MISSION...</p>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="correctSound">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuA0fPTgjMGHm7A7+OZURE=" type="audio/wav">
+    </audio>
+    <audio id="wrongSound">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuA0fPTgjMGHm7A7+OZURE=" type="audio/wav">
+    </audio>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/matrix-rain.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/quiz-handler.js') }}"></script>
+</body>
+</html>

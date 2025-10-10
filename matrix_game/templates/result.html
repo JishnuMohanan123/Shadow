@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHADOW - Mission Complete</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/matrix.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Results Container -->
+    <div class="result-container">
+        <!-- Mission Complete Header -->
+        <div class="result-header">
+            <h1 class="glitch result-title" data-text="MISSION COMPLETE">MISSION COMPLETE</h1>
+            <div class="scan-line"></div>
+        </div>
+
+        <!-- Terminal Results Display -->
+        <div class="results-terminal">
+            <div class="terminal-output">
+                <p class="log-line">> ANALYZING PERFORMANCE...</p>
+                <p class="log-line delay-1">> CALCULATING SECURITY SCORE...</p>
+                <p class="log-line delay-2">> DETERMINING CLEARANCE LEVEL...</p>
+                <p class="log-line delay-3 success">> ANALYSIS COMPLETE</p>
+                <p class="log-line delay-4"><br></p>
+            </div>
+
+            <!-- Score Display -->
+            <div class="score-panel delay-5">
+                <div class="score-circle">
+                    <svg class="progress-ring" width="200" height="200">
+                        <circle class="progress-ring-circle-bg" cx="100" cy="100" r="80"></circle>
+                        <circle class="progress-ring-circle" cx="100" cy="100" r="80"
+                                style="stroke-dashoffset: calc(502 - (502 * {{ percentage }}) / 100)"></circle>
+                    </svg>
+                    <div class="score-text">
+                        <div class="score-number">{{ score }}/{{ total }}</div>
+                        <div class="score-percent">{{ percentage }}%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rank Display -->
+            <div class="rank-display delay-6">
+                <div class="rank-badge">
+                    <span class="rank-icon">{{ rank_icon }}</span>
+                    <h2 class="rank-title">{{ rank }}</h2>
+                    <p class="rank-subtitle">Clearance Level Achieved</p>
+                </div>
+            </div>
+
+            <!-- Performance Stats -->
+            <div class="stats-grid delay-7">
+                <div class="stat-card">
+                    <div class="stat-icon">✓</div>
+                    <div class="stat-value">{{ score }}</div>
+                    <div class="stat-label">Correct Answers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✗</div>
+                    <div class="stat-value">{{ total - score }}</div>
+                    <div class="stat-label">Incorrect Answers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">%</div>
+                    <div class="stat-value">{{ percentage }}%</div>
+                    <div class="stat-label">Accuracy Rate</div>
+                </div>
+            </div>
+
+            <!-- Performance Message -->
+            <div class="performance-message delay-8">
+                {% if percentage >= 90 %}
+                    <p class="message-text success">
+                        <span class="icon">🏆</span>
+                        EXCEPTIONAL PERFORMANCE! You have mastered cyber security fundamentals.
+                        You are ready to defend the digital realm.
+                    </p>
+                {% elif percentage >= 75 %}
+                    <p class="message-text success">
+                        <span class="icon">⭐</span>
+                        EXCELLENT WORK! Your cyber awareness is strong.
+                        Continue training to reach master level.
+                    </p>
+                {% elif percentage >= 60 %}
+                    <p class="message-text warning">
+                        <span class="icon">⚡</span>
+                        GOOD EFFORT! You have a solid foundation.
+                        Review missed concepts to improve your defenses.
+                    </p>
+                {% elif percentage >= 40 %}
+                    <p class="message-text warning">
+                        <span class="icon">⚠️</span>
+                        TRAINING REQUIRED! Your knowledge has gaps.
+                        Additional training recommended before field deployment.
+                    </p>
+                {% else %}
+                    <p class="message-text error">
+                        <span class="icon">🚨</span>
+                        CRITICAL! Immediate retraining necessary.
+                        You are vulnerable to cyber threats.
+                    </p>
+                {% endif %}
+            </div>
+
+            <!-- Review Answers (optional) -->
+            <div class="review-section delay-9">
+                <h3 class="review-title">[ MISSION REVIEW ]</h3>
+                <div class="answers-list">
+                    {% for answer in answers %}
+                    <div class="answer-item {% if answer.is_correct %}correct{% else %}incorrect{% endif %}">
+                        <span class="answer-number">Q{{ answer.question }}</span>
+                        <span class="answer-status">
+                            {% if answer.is_correct %}
+                                ✓ CORRECT
+                            {% else %}
+                                ✗ INCORRECT (Correct: {{ answer.correct_answer }})
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="result-actions delay-10">
+                <a href="{{ url_for('reset') }}" class="matrix-button">
+                    <span class="button-text">TRY AGAIN</span>
+                    <span class="button-subtitle">[ RESTART TRAINING ]</span>
+                </a>
+                <a href="{{ url_for('index') }}" class="matrix-button secondary">
+                    <span class="button-text">EXIT</span>
+                    <span class="button-subtitle">[ RETURN TO TERMINAL ]</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Terminal Footer -->
+        <div class="terminal-footer delay-11">
+            <span class="footer-text">[SYSTEM] Mission data logged | Training session complete</span>
+            <span class="cursor-blink">█</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/matrix-rain.js') }}"></script>
+    <script>
+        // Animate score circle on load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.querySelector('.score-circle').classList.add('animate');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
