@@ -111,9 +111,9 @@ body::before {
 
 .nav {
     display: grid;
-    grid-template-columns: minmax(200px, 1fr) auto minmax(200px, 1fr);
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     max-width: 1400px;
     margin: 0 auto;
     padding: 1rem 2rem;
@@ -167,19 +167,33 @@ body::before {
     gap: 0.75rem;
     align-items: center;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
-    scrollbar-width: none;
-    padding: 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 255, 255, 0.3) rgba(0, 0, 0, 0.2);
+    padding: 0.5rem 0;
     margin: 0;
-    width: max-content;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
+    max-width: 100%;
 }
 
 .nav-links::-webkit-scrollbar {
-    display: none;
+    height: 6px;
+}
+
+.nav-links::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.nav-links::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.nav-links::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 255, 0.5);
 }
 
 .nav-links li {
