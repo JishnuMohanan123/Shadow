@@ -21,6 +21,17 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=SESSION_TIMEOUT_MINUTES)
 
+# Register Claude AI routes
+try:
+    from claude_routes import register_claude_routes
+    register_claude_routes(app)
+    print("✅ Claude AI integration enabled")
+except ImportError as e:
+    print(f"⚠️  Claude AI not available: {e}")
+    print("   To enable: pip install anthropic")
+except Exception as e:
+    print(f"⚠️  Could not register Claude routes: {e}")
+
 
 @app.route('/')
 def index():

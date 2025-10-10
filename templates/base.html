@@ -65,6 +65,15 @@
                     <span class="nav-text">AGENT STATUS</span>
                 </a>
             </li>
+            <li role="none">
+                <a href="{{ url_for('claude_assistant_page') }}"
+                   {% if request.endpoint == 'claude_assistant_page' %}class="active"{% endif %}
+                   role="menuitem"
+                   aria-current="{% if request.endpoint == 'claude_assistant_page' %}page{% endif %}">
+                    <span class="nav-icon" aria-hidden="true" role="img" aria-label="AI Assistant">🤖</span>
+                    <span class="nav-text">AI ASSISTANT</span>
+                </a>
+            </li>
             {% if user[16] == 1 %}
             <li role="none">
                 <a href="{{ url_for('admin_panel') }}"

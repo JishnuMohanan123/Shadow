@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+
+{% block title %}Shadow 1834 - AI Assistant{% endblock %}
+
+{% block content %}
+<div class="card hero-card" style="margin-bottom: 2rem;">
+    <div class="hero-content">
+        <div class="hero-icon" style="font-size: 3rem;">🤖</div>
+        <div class="hero-text">
+            <h1 class="hero-title">CLAUDE AI ASSISTANT</h1>
+            <p class="hero-subtitle">[POWERED BY ANTHROPIC CLAUDE]</p>
+        </div>
+    </div>
+</div>
+
+{% if not claude_available %}
+<div class="alert alert-warning" role="alert">
+    <span class="alert-icon">⚠️</span>
+    <div>
+        <strong>AI Assistant Offline</strong><br>
+        The Claude AI assistant is currently unavailable. Please contact your administrator to enable this feature.
+    </div>
+</div>
+{% endif %}
+
+<div style="display: grid; grid-template-columns: 1fr 350px; gap: 1.5rem; align-items: start;">
+    <!-- Chat Interface -->
+    <div class="card" style="min-height: 600px; display: flex; flex-direction: column;">
+        <div style="border-bottom: 2px solid var(--border-glow); padding-bottom: 1rem; margin-bottom: 1rem;">
+            <h2 style="font-family: 'Orbitron', monospace; color: var(--text-accent); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.5rem;">💬</span>
+                CHAT INTERFACE
+            </h2>
+            <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                Ask anything about cybersecurity, get hints, or request practice questions
+            </p>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div id="chat-messages" style="flex: 1; overflow-y: auto; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: 6px; margin-bottom: 1rem; max-height: 450px;">
+            <!-- Welcome Message -->
+            <div class="message assistant-message" style="display: flex; gap: 1rem; margin-bottom: 1rem; animation: fade-in-up 0.5s ease;">
+                <div style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #00ff88, #00ffff); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                    🤖
+                </div>
+                <div style="flex: 1; background: rgba(0, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.3); border-radius: 12px; padding: 1rem;">
+                    <div style="font-weight: 600; color: var(--text-accent); margin-bottom: 0.5rem; font-family: 'Orbitron', monospace;">
+                        Claude AI Assistant
+                    </div>
+                    <div style="color: var(--text-primary); line-height: 1.6;">
+                        Hello, Agent {{ user[1]|upper }}! 👋<br><br>
+                        I'm Claude, your AI cybersecurity training assistant. I can help you with:
+                        <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                            <li>Understanding security concepts</li>
+                            <li>Getting hints for training modules</li>
+                            <li>Generating practice questions</li>
+                            <li>Analyzing your progress</li>
+                        </ul>
+                        How can I assist you today?
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div style="display: flex; gap: 0.75rem;">
+            <input
+                type="text"
+                id="chat-input"
+                placeholder="Type your message here..."
+                style="flex: 1; padding: 1rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Rajdhani', monospace; font-size: 1rem;"
+                {% if not claude_available %}disabled{% endif %}
+            >
+            <button
+                id="send-button"
+                class="btn btn-primary"
+                style="padding: 1rem 2rem; min-width: 120px;"
+                {% if not claude_available %}disabled{% endif %}
+            >
+                <span style="margin-right: 0.5rem;">📤</span>
+                SEND
+            </button>
+        </div>
+
+        <div id="typing-indicator" style="display: none; margin-top: 1rem; color: var(--text-secondary); font-style: italic; display: flex; align-items: center; gap: 0.5rem;">
+            <span class="typing-dots" style="display: inline-flex; gap: 0.25rem;">
+                <span style="animation: typing 1.4s infinite; animation-delay: 0s;">●</span>
+                <span style="animation: typing 1.4s infinite; animation-delay: 0.2s;">●</span>
+                <span style="animation: typing 1.4s infinite; animation-delay: 0.4s;">●</span>
+            </span>
+            Claude is thinking...
+        </div>
+    </div>
+
+    <!-- Sidebar - Quick Actions -->
+    <div class="card" style="position: sticky; top: 1rem;">
+        <h3 style="font-family: 'Orbitron', monospace; color: var(--text-accent); margin: 0 0 1rem 0; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>⚡</span>
+            QUICK ACTIONS
+        </h3>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <button class="quick-action-btn" onclick="quickAction('hint')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not claude_available %}disabled{% endif %}>
+                <span style="font-size: 1.5rem;">💡</span>
+                <div>
+                    <div style="font-weight: 600;">Get a Hint</div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Need help with a question?</div>
+                </div>
+            </button>
+
+            <button class="quick-action-btn" onclick="quickAction('practice')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not claude_available %}disabled{% endif %}>
+                <span style="font-size: 1.5rem;">📝</span>
+                <div>
+                    <div style="font-weight: 600;">Practice Question</div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Generate new questions</div>
+                </div>
+            </button>
+
+            <button class="quick-action-btn" onclick="quickAction('progress')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not claude_available %}disabled{% endif %}>
+                <span style="font-size: 1.5rem;">📊</span>
+                <div>
+                    <div style="font-weight: 600;">Analyze Progress</div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Get personalized advice</div>
+                </div>
+            </button>
+
+            <button class="quick-action-btn" onclick="quickAction('explain')" style="width: 100%; padding: 0.875rem; border: 1px solid var(--border-glow); border-radius: 6px; background: rgba(0, 255, 255, 0.05); color: var(--text-primary); font-family: 'Orbitron', monospace; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;" {% if not claude_available %}disabled{% endif %}>
+                <span style="font-size: 1.5rem;">🎓</span>
+                <div>
+                    <div style="font-weight: 600;">Explain Concept</div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Learn cybersecurity</div>
+                </div>
+            </button>
+        </div>
+
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-glow);">
+            <h4 style="font-family: 'Orbitron', monospace; color: var(--text-accent); margin: 0 0 0.75rem 0; font-size: 0.9rem;">
+                💡 TIP
+            </h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                Try asking: "Explain phishing attacks", "Generate a password quiz", or "What's my progress?"
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes typing {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+.quick-action-btn:hover:not(:disabled) {
+    background: rgba(0, 255, 255, 0.15);
+    border-color: var(--primary);
+    transform: translateX(5px);
+}
+
+.quick-action-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+#chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-messages::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 255, 0.5);
+}
+</style>
+
+<script>
+let conversationHistory = [];
+
+// Send message function
+async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    // Add user message to chat
+    addMessage(message, 'user');
+    input.value = '';
+
+    // Show typing indicator
+    document.getElementById('typing-indicator').style.display = 'flex';
+
+    try {
+        const response = await fetch('/api/claude/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message,
+                history: conversationHistory
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Add assistant response
+            addMessage(data.response, 'assistant');
+
+            // Update conversation history
+            conversationHistory.push(
+                { role: 'user', content: message },
+                { role: 'assistant', content: data.response }
+            );
+        } else {
+            addMessage('Sorry, I encountered an error. Please try again.', 'assistant', true);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        addMessage('Sorry, I couldn\'t process your request. Please try again.', 'assistant', true);
+    } finally {
+        document.getElementById('typing-indicator').style.display = 'none';
+    }
+}
+
+// Add message to chat
+function addMessage(text, sender, isError = false) {
+    const messagesDiv = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}-message`;
+    messageDiv.style.cssText = 'display: flex; gap: 1rem; margin-bottom: 1rem; animation: fade-in-up 0.5s ease;';
+
+    if (sender === 'user') {
+        messageDiv.innerHTML = `
+            <div style="flex: 1; background: rgba(0, 136, 255, 0.1); border: 1px solid rgba(0, 136, 255, 0.3); border-radius: 12px; padding: 1rem; text-align: right;">
+                <div style="font-weight: 600; color: var(--secondary); margin-bottom: 0.5rem; font-family: 'Orbitron', monospace;">
+                    You
+                </div>
+                <div style="color: var(--text-primary); line-height: 1.6;">
+                    ${escapeHtml(text)}
+                </div>
+            </div>
+            <div style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #0088ff, #0044ff); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                👤
+            </div>
+        `;
+    } else {
+        messageDiv.innerHTML = `
+            <div style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #00ff88, #00ffff); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                🤖
+            </div>
+            <div style="flex: 1; background: ${isError ? 'rgba(255, 68, 68, 0.1)' : 'rgba(0, 255, 255, 0.1)'}; border: 1px solid ${isError ? 'rgba(255, 68, 68, 0.3)' : 'rgba(0, 255, 255, 0.3)'}; border-radius: 12px; padding: 1rem;">
+                <div style="font-weight: 600; color: var(--text-accent); margin-bottom: 0.5rem; font-family: 'Orbitron', monospace;">
+                    Claude AI
+                </div>
+                <div style="color: var(--text-primary); line-height: 1.6; white-space: pre-wrap;">
+                    ${escapeHtml(text)}
+                </div>
+            </div>
+        `;
+    }
+
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Quick actions
+async function quickAction(action) {
+    switch(action) {
+        case 'hint':
+            document.getElementById('chat-input').value = 'Can you give me a hint about phishing detection?';
+            break;
+        case 'practice':
+            document.getElementById('chat-input').value = 'Generate a practice question about passwords';
+            break;
+        case 'progress':
+            await analyzeProgress();
+            break;
+        case 'explain':
+            document.getElementById('chat-input').value = 'Explain what social engineering is';
+            break;
+    }
+}
+
+async function analyzeProgress() {
+    document.getElementById('typing-indicator').style.display = 'flex';
+
+    try {
+        const response = await fetch('/api/claude/analyze-progress');
+        const data = await response.json();
+
+        if (data.success) {
+            addMessage(data.analysis, 'assistant');
+        } else {
+            addMessage('Sorry, I couldn\'t analyze your progress right now.', 'assistant', true);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        addMessage('Sorry, I couldn\'t analyze your progress. Please try again.', 'assistant', true);
+    } finally {
+        document.getElementById('typing-indicator').style.display = 'none';
+    }
+}
+
+// Event listeners
+document.getElementById('send-button').addEventListener('click', sendMessage);
+document.getElementById('chat-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+// Utility function
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+</script>
+
+{% endblock %}
